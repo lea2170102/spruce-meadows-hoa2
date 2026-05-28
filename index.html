@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spruce Meadows Homeowners Association</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest:    #2d5016;
+      --pine:      #3d6b20;
+      --sage:      #6b8f47;
+      --moss:      #a8bc8a;
+      --cream:     #f5f0e8;
+      --parchment: #ede4d0;
+      --white:     #ffffff;
+      --text:      #2a2a2a;
+      --light-text:#555;
+      --gold:      #c8a96e;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--forest);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 16px 40px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .header-top img {
+      height: 80px;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      padding: 0 40px;
+    }
+
+    nav a {
+      color: var(--cream);
+      text-decoration: none;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 13px 24px;
+      transition: background 0.2s, color 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+
+    nav a:hover, nav a.active {
+      background: rgba(255,255,255,0.08);
+      border-bottom-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* ── ADMIN BAR ── */
+    .admin-bar {
+      background: var(--pine);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 6px 24px;
+      font-size: 0.78rem;
+    }
+
+    .admin-bar span { color: var(--moss); letter-spacing: 0.05em; }
+    .admin-bar strong { color: #fff; }
+
+    .admin-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      padding: 4px 14px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .admin-btn:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── ADMIN LOGIN MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 36px 40px;
+      width: 340px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+      text-align: center;
+    }
+
+    .modal h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--forest);
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+    }
+
+    .modal p { font-size: 0.85rem; color: var(--light-text); margin-bottom: 20px; }
+
+    .modal input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid #c5bba8;
+      border-radius: 5px;
+      font-size: 0.95rem;
+      margin-bottom: 14px;
+      font-family: 'Lato', sans-serif;
+    }
+
+    .modal input:focus { outline: none; border-color: var(--pine); }
+
+    .modal-error {
+      color: #c0392b;
+      font-size: 0.82rem;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    .modal-btns { display: flex; gap: 10px; }
+    .modal-btns button { flex: 1; }
+
+    .btn-cancel {
+      background: #e0d8c8;
+      color: var(--text);
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-cancel:hover { background: #d0c8b8; }
+
+    /* ── HERO BANNER ── */
+    .hero {
+      background: var(--pine);
+      color: var(--cream);
+      text-align: center;
+      padding: 60px 20px 50px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .hero h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 400;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--moss);
+      letter-spacing: 0.06em;
+      position: relative;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      display: none;
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 0 20px 60px;
+      animation: fadeIn 0.35s ease;
+    }
+
+    section.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--forest);
+      margin-bottom: 8px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid var(--gold);
+    }
+
+    .section-subtitle {
+      color: var(--light-text);
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── ADMIN-ONLY BLOCKS ── */
+    .admin-only {
+      display: none;
+    }
+    .admin-only.visible {
+      display: block;
+    }
+
+    /* ── ANNOUNCEMENTS ── */
+    .announcement-card {
+      background: var(--white);
+      border-left: 5px solid var(--pine);
+      border-radius: 6px;
+      padding: 20px 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      position: relative;
+    }
+
+    .announcement-card .date {
+      font-size: 0.75rem;
+      color: var(--sage);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .announcement-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--forest);
+      margin-bottom: 6px;
+    }
+
+    .announcement-card p {
+      font-size: 0.9rem;
+      color: var(--light-text);
+      line-height: 1.6;
+    }
+
+    .announcement-card .delete-btn {
+      position: absolute;
+      top: 12px; right: 14px;
+      background: none;
+      border: none;
+      color: #ccc;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .announcement-card .delete-btn:hover { color: #c0392b; }
+
+    .add-announcement {
+      background: var(--parchment);
+      border: 2px dashed var(--moss);
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 28px;
+    }
+
+    .add-announcement h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--forest);
+      margin-bottom: 14px;
+      font-size: 1.1rem;
+    }
+
+    .add-announcement input,
+    .add-announcement textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #c5bba8;
+      border-radius: 5px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+      background: var(--white);
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .add-announcement textarea { height: 90px; resize: vertical; }
+
+    .btn {
+      background: var(--forest);
+      color: var(--cream);
+      border: none;
+      padding: 10px 24px;
+      border-radius: 5px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn:hover { background: var(--pine); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    /* ── CALENDAR ── */
+    .calendar-wrap {
+      background: var(--white);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .cal-header {
+      background: var(--forest);
+      color: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 28px;
+    }
+
+    .cal-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+    }
+
+    .cal-nav-btn {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: var(--cream);
+      font-size: 1.2rem;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .cal-nav-btn:hover { background: rgba(255,255,255,0.28); }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      background: #e0d8c8;
+      padding: 1px;
+    }
+
+    .cal-day-name {
+      background: var(--parchment);
+      text-align: center;
+      padding: 10px 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+    }
+
+    .cal-day {
+      background: var(--white);
+      min-height: 72px;
+      padding: 6px 8px;
+      font-size: 0.85rem;
+      color: var(--light-text);
+    }
+
+    .cal-day.other-month { background: #faf8f4; color: #c0b8a8; }
+    .cal-day.today { outline: 2px solid var(--pine); outline-offset: -2px; }
+
+    .cal-day .day-num {
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .cal-day.other-month .day-num { color: #c0b8a8; }
+
+    .event-dot {
+      font-size: 0.68rem;
+      background: var(--pine);
+      color: #fff;
+      border-radius: 3px;
+      padding: 1px 4px;
+      margin-top: 2px;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .event-dot.community { background: var(--sage); }
+
+    .add-event-form {
+      background: var(--parchment);
+      border: 2px dashed var(--moss);
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 28px;
+    }
+
+    .add-event-form h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--forest);
+      margin-bottom: 14px;
+    }
+
+    .form-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+
+    .form-row input, .form-row select {
+      flex: 1; min-width: 160px;
+      padding: 10px 14px;
+      border: 1px solid #c5bba8;
+      border-radius: 5px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+      background: var(--white);
+      color: var(--text);
+    }
+
+    /* ── INFORMATION ── */
+    .info-card {
+      background: var(--white);
+      border-radius: 8px;
+      padding: 28px 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    }
+
+    .info-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      color: var(--forest);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info-card h3 .icon {
+      background: var(--forest);
+      color: #fff;
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .info-card p {
+      color: var(--light-text);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .meeting-note {
+      background: var(--parchment);
+      border-radius: 5px;
+      padding: 14px 18px;
+      margin-top: 8px;
+      font-size: 0.87rem;
+      color: var(--text);
+      line-height: 1.6;
+      border-left: 4px solid var(--sage);
+    }
+
+    .meeting-note .note-date {
+      font-weight: 700;
+      color: var(--forest);
+      margin-bottom: 4px;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    .add-note-form { margin-top: 16px; }
+
+    .add-note-form input,
+    .add-note-form textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #c5bba8;
+      border-radius: 5px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+      background: var(--white);
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .add-note-form textarea { height: 100px; resize: vertical; }
+
+    .doc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--forest);
+      color: var(--cream);
+      text-decoration: none;
+      padding: 11px 22px;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      transition: background 0.2s;
+    }
+    .doc-link:hover { background: var(--pine); }
+
+    /* ── BOARD + CONTACT (merged) ── */
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 22px;
+      margin-bottom: 48px;
+    }
+
+    .board-card {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 28px 22px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      border-top: 5px solid var(--pine);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .board-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+    }
+
+    .board-avatar {
+      width: 68px; height: 68px;
+      border-radius: 50%;
+      background: var(--forest);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      color: var(--cream);
+      font-family: 'Playfair Display', serif;
+      margin: 0 auto 12px;
+      font-weight: 700;
+    }
+
+    .board-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--forest);
+      margin-bottom: 4px;
+    }
+
+    .board-card .role {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sage);
+      font-weight: 700;
+    }
+
+    /* ── CONTACT FORM ── */
+    .contact-card {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 32px 36px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .contact-card label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--forest);
+      margin-bottom: 5px;
+      margin-top: 16px;
+    }
+
+    .contact-card input,
+    .contact-card textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid #c5bba8;
+      border-radius: 5px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+      background: var(--cream);
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+
+    .contact-card input:focus,
+    .contact-card textarea:focus { outline: none; border-color: var(--pine); }
+
+    .contact-card textarea { height: 130px; resize: vertical; }
+
+    .form-success {
+      display: none;
+      background: #eafaf1;
+      border: 1px solid #a9dfbf;
+      color: #1e8449;
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin-top: 16px;
+      font-size: 0.9rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--forest);
+      color: var(--moss);
+      text-align: center;
+      padding: 28px 20px;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    footer strong { color: var(--cream); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .header-top { padding: 12px 16px; }
+      .header-top img { height: 60px; }
+      nav { flex-wrap: wrap; padding: 0 8px; }
+      nav a { padding: 10px 12px; font-size: 0.75rem; }
+      .hero h2 { font-size: 1.7rem; }
+      .contact-card { padding: 22px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN MODAL ── -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <h3>🌲 Board Admin Login</h3>
+    <p>Enter the admin password to post announcements, add events, and manage meeting notes.</p>
+    <input type="password" id="admin-password-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') tryLogin()" />
+    <div class="modal-error" id="login-error">Incorrect password. Please try again.</div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn" onclick="tryLogin()">Log In</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-top">
+    <img src="logo_png.png" alt="Spruce Meadows HOA Logo" onerror="this.style.display='none'"/>
+  </div>
+  <nav>
+    <a href="#" class="active" onclick="showSection('home', this)">Home</a>
+    <a href="#" onclick="showSection('calendar', this)">Calendar</a>
+    <a href="#" onclick="showSection('information', this)">Information</a>
+    <a href="#" onclick="showSection('boardcontact', this)">Board &amp; Contact</a>
+  </nav>
+  <div class="admin-bar" id="admin-bar">
+    <span id="admin-status">👤 Viewing as resident</span>
+    <button class="admin-btn" id="admin-toggle-btn" onclick="adminToggle()">Board Login</button>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <h2>Welcome to Spruce Meadows</h2>
+  <p>A community of neighbors &mdash; Boise, Idaho</p>
+</div>
+
+<!-- ══════════════ HOME ══════════════ -->
+<section id="home" class="active">
+  <h2 class="section-title">Community Announcements</h2>
+  <p class="section-subtitle">Stay up to date with the latest news from your HOA board.</p>
+
+  <div id="announcements-list">
+    <div class="announcement-card">
+      <div class="date">May 2026</div>
+      <h3>Welcome to Our New Website!</h3>
+      <p>The Spruce Meadows HOA website is now live. Check back here for meeting dates, neighborhood updates, and important reminders from the board.</p>
+    </div>
+  </div>
+
+  <!-- ADMIN ONLY: post announcement -->
+  <div class="admin-only add-announcement" id="add-ann-block">
+    <h3>🔒 Post a New Announcement <small style="font-size:0.7rem; color:var(--sage); font-family:'Lato',sans-serif;">(Board Only)</small></h3>
+    <input type="text" id="ann-title" placeholder="Announcement title" />
+    <textarea id="ann-body" placeholder="Write your announcement here..."></textarea>
+    <button class="btn" onclick="addAnnouncement()">Post Announcement</button>
+  </div>
+</section>
+
+<!-- ══════════════ CALENDAR ══════════════ -->
+<section id="calendar">
+  <h2 class="section-title">HOA Calendar</h2>
+  <p class="section-subtitle">Upcoming HOA meetings and community events.</p>
+
+  <div class="calendar-wrap">
+    <div class="cal-header">
+      <button class="cal-nav-btn" onclick="changeMonth(-1)">&#8249;</button>
+      <h3 id="cal-month-label"></h3>
+      <button class="cal-nav-btn" onclick="changeMonth(1)">&#8250;</button>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+
+  <!-- ADMIN ONLY: add event -->
+  <div class="admin-only add-event-form" id="add-evt-block">
+    <h3>🔒 Add an Event <small style="font-size:0.7rem; color:var(--sage); font-family:'Lato',sans-serif;">(Board Only)</small></h3>
+    <div class="form-row">
+      <input type="text" id="evt-title" placeholder="Event title" />
+      <input type="date" id="evt-date" />
+      <select id="evt-type">
+        <option value="hoa">HOA Meeting</option>
+        <option value="community">Community Event</option>
+      </select>
+    </div>
+    <button class="btn" onclick="addEvent()">Add to Calendar</button>
+  </div>
+</section>
+
+<!-- ══════════════ INFORMATION ══════════════ -->
+<section id="information">
+  <h2 class="section-title">HOA Information</h2>
+  <p class="section-subtitle">Meeting notes, community rules, and important documents.</p>
+
+  <!-- Meeting Notes -->
+  <div class="info-card">
+    <h3><span class="icon">📋</span> HOA Meeting Notes</h3>
+    <p>Minutes and summaries from recent board meetings.</p>
+
+    <div id="notes-list">
+      <div class="meeting-note">
+        <div class="note-date">May 2026 — Inaugural Board Meeting</div>
+        New website launched. Board introduced: Brad Harris (President), Leslie Perez (Treasurer), Leah Andrade (Secretary). Next meeting date to be announced.
+      </div>
+    </div>
+
+    <!-- ADMIN ONLY: add note -->
+    <div class="admin-only add-note-form" id="add-note-block">
+      <h3 style="font-family:'Playfair Display',serif; color:var(--forest); margin-bottom:12px; font-size:1rem;">🔒 Add Meeting Notes <small style="font-size:0.7rem; color:var(--sage); font-family:'Lato',sans-serif;">(Board Only)</small></h3>
+      <input type="text" id="note-title" placeholder="Meeting date & title (e.g. June 2026 — Regular Meeting)" />
+      <textarea id="note-body" placeholder="Paste or type meeting notes here..."></textarea>
+      <button class="btn" onclick="addNote()">Save Notes</button>
+    </div>
+  </div>
+
+  <!-- HOA Rules -->
+  <div class="info-card">
+    <h3><span class="icon">📜</span> Restrictive Covenants &amp; Community Rules</h3>
+    <p>The official Spruce Meadows Subdivision No. 4 Restrictive Covenants govern all properties in this neighborhood. Key highlights include:</p>
+    <ul style="font-size:0.88rem; color:var(--light-text); line-height:1.9; padding-left:20px; margin-bottom:16px;">
+      <li>All building plans require written Architectural Committee approval before construction.</li>
+      <li>Minimum home size: 1,300 sq ft (single-story); 1,400 sq ft (two-story/tri-level); 2,100 sq ft (with basement).</li>
+      <li>All homes must include brick or stone on the front and a minimum 4-in-12 roof pitch.</li>
+      <li>Enclosed garage required (2–3 car capacity).</li>
+      <li>Fences must not extend closer than 20 ft to street, and no higher than 6 ft without approval.</li>
+      <li>No more than 2 dogs/cats per household. Farm animals prohibited.</li>
+      <li>No boats, trailers, RVs, or unsightly vehicles parked outside enclosed garages.</li>
+      <li>Front yard landscaping to be completed within 30 days of occupancy.</li>
+      <li>Weeds must be cut to under 4 inches.</li>
+      <li>Satellite dishes/antennas outside buildings require Architectural Committee approval.</li>
+    </ul>
+    <a class="doc-link" href="spruce-meadows-rules.pdf" download>⬇ Download Full Rules Document (PDF)</a>
+  </div>
+</section>
+
+<!-- ══════════════ BOARD & CONTACT (merged) ══════════════ -->
+<section id="boardcontact">
+  <h2 class="section-title">Board Members &amp; Contact</h2>
+  <p class="section-subtitle">Meet your elected board and reach out with questions or concerns.</p>
+
+  <div class="board-grid">
+    <div class="board-card">
+      <div class="board-avatar">BH</div>
+      <h3>Brad Harris</h3>
+      <div class="role">President</div>
+    </div>
+    <div class="board-card">
+      <div class="board-avatar">LP</div>
+      <h3>Leslie Perez</h3>
+      <div class="role">Treasurer</div>
+    </div>
+    <div class="board-card">
+      <div class="board-avatar">LA</div>
+      <h3>Leah Andrade</h3>
+      <div class="role">Secretary</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; color:var(--forest); font-size:1.5rem; margin-bottom:8px;">Send the Board a Message</h3>
+  <p style="font-size:0.88rem; color:var(--light-text); margin-bottom:20px;">Have a question, concern, or request? Fill out the form below and the board will be in touch.</p>
+
+  <div class="contact-card">
+    <label>Your Name</label>
+    <input type="text" id="contact-name" placeholder="Jane Smith" />
+
+    <label>Your Email</label>
+    <input type="email" id="contact-email" placeholder="you@email.com" />
+
+    <label>Subject</label>
+    <input type="text" id="contact-subject" placeholder="e.g. Fence approval request" />
+
+    <label>Message</label>
+    <textarea id="contact-msg" placeholder="Write your message here..."></textarea>
+
+    <button class="btn" style="margin-top:18px;" onclick="sendContact()">Send Message</button>
+    <div class="form-success" id="contact-success">
+      ✅ Your message has been sent to the board. We'll be in touch soon!
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <strong>Spruce Meadows Homeowners Association</strong><br/>
+  Boise, Idaho 83713 &mdash;
+  <a href="mailto:spruce.meadows83713@gmail.com" style="color:var(--gold);">spruce.meadows83713@gmail.com</a><br/>
+  <span style="font-size:0.75rem; margin-top:6px; display:block; opacity:0.6;">&copy; 2026 Spruce Meadows HOA. All rights reserved.</span>
+</footer>
+
+<script>
+  // ── ADMIN PASSWORD ──
+  // To change the password, edit the word inside the quotes below:
+  const ADMIN_PASSWORD = 'bigtreehoa';
+  let isAdmin = false;
+
+  function adminToggle() {
+    if (isAdmin) {
+      logOut();
+    } else {
+      document.getElementById('login-modal').classList.add('open');
+      document.getElementById('admin-password-input').value = '';
+      document.getElementById('login-error').style.display = 'none';
+      setTimeout(() => document.getElementById('admin-password-input').focus(), 100);
+    }
+  }
+
+  function tryLogin() {
+    const pw = document.getElementById('admin-password-input').value;
+    if (pw === ADMIN_PASSWORD) {
+      isAdmin = true;
+      document.getElementById('login-modal').classList.remove('open');
+      document.getElementById('admin-status').innerHTML = '🔓 Logged in as Board Admin';
+      document.getElementById('admin-toggle-btn').textContent = 'Log Out';
+      document.querySelectorAll('.admin-only').forEach(el => el.classList.add('visible'));
+      document.querySelectorAll('.announcement-card').forEach(card => {
+        if (!card.querySelector('.delete-btn')) {
+          const btn = document.createElement('button');
+          btn.className = 'delete-btn';
+          btn.title = 'Remove';
+          btn.textContent = '✕';
+          btn.onclick = function() { deleteAnnouncement(this); };
+          card.appendChild(btn);
+        }
+      });
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+      document.getElementById('admin-password-input').value = '';
+      document.getElementById('admin-password-input').focus();
+    }
+  }
+
+  function logOut() {
+    isAdmin = false;
+    document.getElementById('admin-status').innerHTML = '👤 Viewing as resident';
+    document.getElementById('admin-toggle-btn').textContent = 'Board Login';
+    document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('visible'));
+    document.querySelectorAll('.announcement-card .delete-btn').forEach(btn => btn.remove());
+  }
+
+  function closeModal() {
+    document.getElementById('login-modal').classList.remove('open');
+  }
+
+  // ── NAVIGATION ──
+  function showSection(id, el) {
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+    if (el) el.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── ANNOUNCEMENTS ──
+  function addAnnouncement() {
+    const title = document.getElementById('ann-title').value.trim();
+    const body  = document.getElementById('ann-body').value.trim();
+    if (!title || !body) { alert('Please fill in both the title and message.'); return; }
+    const now = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    const card = document.createElement('div');
+    card.className = 'announcement-card';
+    card.innerHTML = `
+      <div class="date">${now}</div>
+      <h3>${title}</h3>
+      <p>${body}</p>
+      <button class="delete-btn" onclick="deleteAnnouncement(this)" title="Remove">✕</button>`;
+    document.getElementById('announcements-list').prepend(card);
+    document.getElementById('ann-title').value = '';
+    document.getElementById('ann-body').value = '';
+  }
+
+  function deleteAnnouncement(btn) {
+    if (confirm('Remove this announcement?')) btn.closest('.announcement-card').remove();
+  }
+
+  // ── CALENDAR ──
+  let currentDate = new Date();
+  let events = [
+    { date: '2026-06-10', title: 'HOA Meeting', type: 'hoa' },
+    { date: '2026-07-08', title: 'HOA Meeting', type: 'hoa' },
+  ];
+
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  function renderCalendar() {
+    const year  = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    document.getElementById('cal-month-label').textContent = `${months[month]} ${year}`;
+    const grid = document.getElementById('cal-grid');
+    grid.innerHTML = '';
+
+    dayNames.forEach(d => {
+      const cell = document.createElement('div');
+      cell.className = 'cal-day-name';
+      cell.textContent = d;
+      grid.appendChild(cell);
+    });
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const prevDays = new Date(year, month, 0).getDate();
+    const today = new Date();
+
+    for (let i = firstDay - 1; i >= 0; i--) {
+      const cell = document.createElement('div');
+      cell.className = 'cal-day other-month';
+      cell.innerHTML = `<div class="day-num">${prevDays - i}</div>`;
+      grid.appendChild(cell);
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const cell = document.createElement('div');
+      cell.className = 'cal-day';
+      const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      if (d === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+        cell.classList.add('today');
+      }
+      cell.innerHTML = `<div class="day-num">${d}</div>`;
+      events.filter(e => e.date === dateStr).forEach(e => {
+        const dot = document.createElement('span');
+        dot.className = 'event-dot' + (e.type === 'community' ? ' community' : '');
+        dot.textContent = e.title;
+        cell.appendChild(dot);
+      });
+      grid.appendChild(cell);
+    }
+
+    const remaining = 42 - (firstDay + daysInMonth);
+    for (let d = 1; d <= remaining; d++) {
+      const cell = document.createElement('div');
+      cell.className = 'cal-day other-month';
+      cell.innerHTML = `<div class="day-num">${d}</div>`;
+      grid.appendChild(cell);
+    }
+  }
+
+  function changeMonth(dir) {
+    currentDate.setMonth(currentDate.getMonth() + dir);
+    renderCalendar();
+  }
+
+  function addEvent() {
+    const title = document.getElementById('evt-title').value.trim();
+    const date  = document.getElementById('evt-date').value;
+    const type  = document.getElementById('evt-type').value;
+    if (!title || !date) { alert('Please enter a title and date.'); return; }
+    events.push({ date, title, type });
+    renderCalendar();
+    document.getElementById('evt-title').value = '';
+    document.getElementById('evt-date').value  = '';
+  }
+
+  renderCalendar();
+
+  // ── MEETING NOTES ──
+  function addNote() {
+    const title = document.getElementById('note-title').value.trim();
+    const body  = document.getElementById('note-body').value.trim();
+    if (!title || !body) { alert('Please fill in both fields.'); return; }
+    const note = document.createElement('div');
+    note.className = 'meeting-note';
+    note.innerHTML = `<div class="note-date">${title}</div>${body}`;
+    document.getElementById('notes-list').prepend(note);
+    document.getElementById('note-title').value = '';
+    document.getElementById('note-body').value  = '';
+  }
+
+  // ── CONTACT FORM ──
+  function sendContact() {
+    const name    = document.getElementById('contact-name').value.trim();
+    const email   = document.getElementById('contact-email').value.trim();
+    const subject = document.getElementById('contact-subject').value.trim();
+    const msg     = document.getElementById('contact-msg').value.trim();
+    if (!name || !email || !msg) { alert('Please fill in your name, email, and message.'); return; }
+    const mailto = `mailto:spruce.meadows83713@gmail.com?subject=${encodeURIComponent(subject || 'HOA Contact Form')}&body=${encodeURIComponent('From: ' + name + ' <' + email + '>\n\n' + msg)}`;
+    window.location.href = mailto;
+    document.getElementById('contact-success').style.display = 'block';
+  }
+</script>
+</body>
+</html>
