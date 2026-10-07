@@ -1,0 +1,253 @@
+/* Spruce Meadows HOA - site styles
+   Stage 1: base styles + Board Login / Board Portal.
+   The full public-site design is added in Stage 2. */
+
+:root {
+  --forest:   #244734;  /* primary: navigation, main buttons, headings */
+  --sage:     #A3B18A;  /* secondary: borders and backgrounds only (too light for text) */
+  --ivory:    #F8F7F2;  /* page background */
+  --olive:    #737B4C;  /* accents: borders, large text only */
+  --charcoal: #292D28;  /* body text */
+  --white:    #FFFFFF;
+  --border:   #8A8F84;  /* form field borders (3:1 contrast on white) */
+
+  --error-bg:     #FBEDEB;
+  --error-border: #B3261E;
+  --error-text:   #7A1A14;
+  --success-bg:   #EEF3E8;
+  --info-bg:      #F1F2EA;
+
+  --radius: 6px;
+  --font-body: "Source Sans 3", "Segoe UI", Arial, sans-serif;
+  --font-heading: "Lora", Georgia, "Times New Roman", serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { font-size: 100%; }
+
+body {
+  margin: 0;
+  background: var(--ivory);
+  color: var(--charcoal);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;   /* 17px */
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  color: var(--forest);
+  line-height: 1.25;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+h1 { font-size: 1.875rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
+
+p { margin: 0 0 1rem; }
+
+a { color: var(--forest); }
+
+[hidden] { display: none !important; }
+
+/* Visible keyboard focus everywhere */
+:focus-visible {
+  outline: 3px solid var(--forest);
+  outline-offset: 2px;
+}
+h1:focus { outline: none; }
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  background: var(--white);
+  color: var(--forest);
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--forest);
+  border-radius: var(--radius);
+  z-index: 10;
+}
+.skip-link:focus { top: 1rem; }
+
+/* ---------- Header ---------- */
+/* The logo has a white background, so it always sits on white. */
+.logo-band {
+  background: var(--white);
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid #E4E2D8;
+}
+.logo-link { display: inline-block; }
+.logo {
+  display: block;
+  width: 100%;
+  height: auto;          /* keeps the original proportions */
+  margin: 0 auto;
+}
+.logo-small { max-width: 280px; }
+
+.nav-band {
+  background: var(--forest);
+  min-height: 0.5rem;
+}
+
+/* ---------- Page layout ---------- */
+.page {
+  flex: 1;
+  width: 100%;
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+.page-narrow { max-width: 34rem; }
+
+.intro { color: var(--charcoal); margin-bottom: 1.5rem; }
+
+.card {
+  background: var(--white);
+  border: 1px solid #E4E2D8;
+  border-top: 4px solid var(--forest);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.loading-text { color: var(--charcoal); }
+
+/* ---------- Forms ---------- */
+.field { margin-bottom: 1.25rem; }
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.375rem;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.625rem 0.75rem;
+  font: inherit;
+  font-size: 1rem;       /* 16px+ prevents phones from zooming in */
+  color: var(--charcoal);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+input[aria-invalid="true"] {
+  border: 2px solid var(--error-border);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.625rem 1.5rem;
+  font: inherit;
+  font-weight: 700;
+  border-radius: var(--radius);
+  border: 2px solid var(--forest);
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--forest);
+  color: var(--white);
+}
+.btn-primary:hover { background: #1A3526; border-color: #1A3526; }
+.btn-secondary {
+  background: var(--white);
+  color: var(--forest);
+}
+.btn-secondary:hover { background: var(--info-bg); }
+.btn:disabled { opacity: 0.65; cursor: not-allowed; }
+.btn-primary:focus-visible { outline-color: var(--charcoal); }
+.btn-block { width: 100%; }
+
+/* A button that looks like a text link (for secondary actions) */
+.link-button {
+  background: none;
+  border: none;
+  padding: 0.5rem 0.25rem;
+  min-height: 44px;
+  font: inherit;
+  color: var(--forest);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.link-button:disabled { opacity: 0.65; cursor: not-allowed; }
+
+.forgot { text-align: center; margin: 0.75rem 0 0; }
+
+/* ---------- Messages ---------- */
+.message {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  border-left: 5px solid;
+  margin: 0 0 1.25rem;
+}
+.message-error   { background: var(--error-bg);   border-color: var(--error-border); color: var(--error-text); }
+.message-success { background: var(--success-bg); border-color: var(--forest);       color: var(--forest); }
+.message-info    { background: var(--info-bg);    border-color: var(--olive);        color: var(--charcoal); }
+
+/* ---------- Board Portal ---------- */
+.portal-menu {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+@media (min-width: 30rem) {
+  .portal-menu { grid-template-columns: 1fr 1fr; }
+}
+.portal-button {
+  min-height: 72px;
+  padding: 1rem;
+  font: inherit;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--forest);
+  background: var(--white);
+  border: 2px solid var(--forest);
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: center;
+}
+.portal-button:hover { background: var(--info-bg); }
+
+.portal-footer {
+  border-top: 1px solid #E4E2D8;
+  padding-top: 1.5rem;
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  background: var(--white);
+  border-top: 4px solid var(--forest);
+  text-align: center;
+  padding: 1.25rem 1rem;
+  font-size: 0.9375rem;
+}
+.site-footer p { margin: 0; }
+
+.noscript {
+  background: var(--error-bg);
+  color: var(--error-text);
+  padding: 1rem;
+  text-align: center;
+  margin: 0;
+}

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Board Login – Spruce Meadows HOA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-state="loading">
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="logo-band">
+      <!-- Stage 2 will point this at the new Home page. -->
+      <a class="logo-link" href="../">
+        <img class="logo logo-small" src="images/logo.png" width="1020" height="364"
+             alt="Spruce Meadows Homeowners Association – go to the Home page">
+      </a>
+    </div>
+    <div class="nav-band" aria-hidden="true"></div>
+  </header>
+
+  <main id="main" class="page page-narrow">
+
+    <!-- Shown while Firebase checks whether the board is logged in -->
+    <section id="loading-view" aria-live="polite">
+      <p class="loading-text">Loading the Board Portal…</p>
+      <p id="load-problem" class="message message-error" hidden>
+        The Board Portal couldn't load. Please check your internet connection and refresh the page.
+      </p>
+    </section>
+
+    <!-- Board Login -->
+    <section id="login-view" hidden aria-labelledby="login-heading">
+      <h1 id="login-heading">Board Login</h1>
+      <p class="intro">For Spruce Meadows HOA board members only.</p>
+
+      <form id="login-form" class="card" novalidate>
+        <div class="field">
+          <label for="board-password">Board password</label>
+          <input id="board-password" name="password" type="password"
+                 autocomplete="current-password" required
+                 aria-describedby="login-message">
+        </div>
+
+        <p id="login-message" class="message" role="alert" hidden></p>
+
+        <button id="login-button" type="submit" class="btn btn-primary btn-block">Log In</button>
+
+        <p class="forgot">
+          <button id="forgot-button" type="button" class="link-button">Forgot password?</button>
+        </p>
+      </form>
+    </section>
+
+    <!-- Board Portal (after login) -->
+    <section id="portal-view" hidden aria-labelledby="portal-heading">
+      <h1 id="portal-heading" tabindex="-1">Board Portal</h1>
+      <p class="intro">Choose what you'd like to update.</p>
+
+      <div class="portal-menu">
+        <button type="button" class="portal-button" data-section="Announcements">Announcements</button>
+        <button type="button" class="portal-button" data-section="Calendar">Calendar</button>
+        <button type="button" class="portal-button" data-section="Resources">Resources</button>
+        <button type="button" class="portal-button" data-section="Board Members">Board Members</button>
+      </div>
+
+      <p id="portal-message" class="message" role="status" hidden></p>
+
+      <div class="portal-footer">
+        <button id="logout-button" type="button" class="btn btn-secondary">Log Out</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Spruce Meadows Homeowners Association · Boise, Idaho</p>
+  </footer>
+
+  <noscript>
+    <p class="noscript">The Board Portal needs JavaScript turned on in your browser.</p>
+  </noscript>
+
+  <script type="module" src="js/board.js"></script>
+  <script>
+    // If the portal hasn't started after 10 seconds (for example, no internet),
+    // tell the person instead of showing "Loading…" forever.
+    setTimeout(function () {
+      if (document.body.getAttribute("data-state") === "loading") {
+        document.getElementById("load-problem").hidden = false;
+      }
+    }, 10000);
+  </script>
+</body>
+</html>

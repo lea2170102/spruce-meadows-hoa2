@@ -1,0 +1,149 @@
+// ============================================================
+// REFERENCE COPY ONLY - editing this file changes NOTHING.
+// The live rules are in the Firebase console:
+//   Firestore Database -> Rules
+// If you change the live rules, paste the new version here too.
+// ============================================================
+
+rules_version = '2';
+
+// Spruce Meadows HOA - Firestore security rules
+// Everyone can READ public website content.
+// Only the single shared Board account can ADD, EDIT or DELETE it.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- Helpers ----------
+
+    // The one shared board login (Firebase Authentication user ID).
+    function isBoard() {
+      return request.auth != null
+        && request.auth.uid == 'cB4gvdEcy1WFw3Xix9FGFTjqu742';
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    // Required text: present, non-empty, not too long.
+    function reqText(f, max) {
+      return incoming()[f] is string
+        && incoming()[f].size() > 0
+        && incoming()[f].size() <= max;
+    }
+
+    // Optional text: missing, empty/null, or not too long.
+    function optText(f, max) {
+      return !(f in incoming()) || incoming()[f] == null
+        || (incoming()[f] is string && incoming()[f].size() <= max);
+    }
+
+    // Links must be https:// with no spaces (blocks "javascript:" tricks).
+    function isUrl(v) {
+      return v is string && v.size() <= 2000 && v.matches('https://[^ ]+');
+    }
+    function optUrl(f) {
+      return !(f in incoming()) || incoming()[f] == null || incoming()[f] == ''
+        || isUrl(incoming()[f]);
+    }
+
+    // Dates are stored as "YYYY-MM-DD", times as "HH:MM" (Boise local time).
+    function optDate(f) {
+      return !(f in incoming()) || incoming()[f] == null || incoming()[f] == ''
+        || (incoming()[f] is string && incoming()[f].matches('[0-9]{4}-[0-9]{2}-[0-9]{2}'));
+    }
+    function optTime(f) {
+      return !(f in incoming()) || incoming()[f] == null || incoming()[f] == ''
+        || (incoming()[f] is string && incoming()[f].matches('[0-9]{2}:[0-9]{2}'));
+    }
+    function optBool(f) {
+      return !(f in incoming()) || incoming()[f] is bool;
+    }
+    function optTimestamp(f) {
+      return !(f in incoming()) || incoming()[f] == null || incoming()[f] is timestamp;
+    }
+
+    // ---------- Announcements ----------
+    match /announcements/{id} {
+      allow read: if true;
+      allow delete: if isBoard();
+      allow create, update: if isBoard()
+        && incoming().keys().hasOnly(['title', 'body', 'publishDate', 'expiresOn', 'pinned',
+                                      'buttonText', 'buttonUrl', 'createdAt', 'updatedAt'])
+        && reqText('title', 150)
+        && reqText('body', 5000)
+        && optDate('publishDate')
+        && optDate('expiresOn')
+        && optBool('pinned')
+        && optText('buttonText', 60)
+        && optUrl('buttonUrl')
+        && optTimestamp('createdAt')
+        && optTimestamp('updatedAt');
+    }
+
+    // ---------- Calendar events ----------
+    // "type" is only kept so events from the old site stay editable.
+    match /events/{id} {
+      allow read: if true;
+      allow delete: if isBoard();
+      allow create, update: if isBoard()
+        && incoming().keys().hasOnly(['title', 'date', 'startTime', 'endTime', 'location',
+                                      'description', 'url', 'category', 'type',
+                                      'createdAt', 'updatedAt'])
+        && reqText('title', 150)
+        && incoming().date is string
+        && incoming().date.matches('[0-9]{4}-[0-9]{2}-[0-9]{2}')
+        && optTime('startTime')
+        && optTime('endTime')
+        && optText('location', 200)
+        && optText('description', 3000)
+        && optUrl('url')
+        && (!('category' in incoming()) || incoming().category in ['meeting', 'community', 'other'])
+        && optText('type', 20)
+        && optTimestamp('createdAt')
+        && optTimestamp('updatedAt');
+    }
+
+    // ---------- Resources (links only - files live in Google Drive) ----------
+    match /resources/{id} {
+      allow read: if true;
+      allow delete: if isBoard();
+      allow create, update: if isBoard()
+        && incoming().keys().hasOnly(['title', 'category', 'year', 'url', 'description',
+                                      'createdAt', 'updatedAt'])
+        && reqText('title', 150)
+        && incoming().category in ['governing', 'minutes', 'dues', 'other']
+        && isUrl(incoming().url)
+        && (!('year' in incoming()) || incoming().year == null
+            || (incoming().year is int && incoming().year >= 1950 && incoming().year <= 2100))
+        && optText('description', 500)
+        && optTimestamp('createdAt')
+        && optTimestamp('updatedAt');
+    }
+
+    // ---------- Board positions (Contact page) ----------
+    match /boardMembers/{id} {
+      allow read: if true;
+      allow delete: if isBoard();
+      allow create, update: if isBoard()
+        && incoming().keys().hasOnly(['role', 'name', 'order', 'createdAt', 'updatedAt'])
+        && reqText('role', 80)
+        && optText('name', 80)
+        && incoming().order is number
+        && optTimestamp('createdAt')
+        && optTimestamp('updatedAt');
+    }
+
+    // ---------- Old site's meeting notes ----------
+    // Read-only so the old site keeps working until launch. Remove after launch.
+    match /notes/{id} {
+      allow read: if true;
+    }
+
+    // ---------- Everything else: locked ----------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
