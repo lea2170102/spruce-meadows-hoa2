@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Contact – Spruce Meadows HOA</title>
+  <meta name="description" content="Spruce Meadows HOA board members and how to contact the board.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="logo-band">
+      <p class="utility"><a class="board-link" href="board.html">Board Login</a></p>
+      <a class="logo-link" href="index.html">
+        <img class="logo logo-small" src="images/logo.png" width="1020" height="364" alt="Spruce Meadows Homeowners Association – go to the Home page">
+      </a>
+    </div>
+    <nav class="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="calendar.html">Calendar</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="contact.html" aria-current="page">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="page">
+
+    <h1>Contact</h1>
+    <p class="intro">Your HOA board is made up of neighbors who volunteer their time. We're happy to help.</p>
+
+    <section class="page-section" aria-labelledby="board-heading">
+      <h2 id="board-heading" class="section-heading">Your HOA Board</h2>
+      <div id="board-list" aria-live="polite">
+        <p class="status-text">Loading board members…</p>
+      </div>
+    </section>
+
+    <section class="page-section" aria-labelledby="form-heading">
+      <h2 id="form-heading" class="section-heading">Contact the Board</h2>
+      <p>Have a question, concern, or request? Send the board a message and we'll reply by email.
+        You can also email us directly at <a href="mailto:spruce.meadows83713@gmail.com">spruce.meadows83713@gmail.com</a>.</p>
+
+      <form id="contact-form" class="card contact-form" novalidate>
+        <div class="field">
+          <label for="contact-name">Your name</label>
+          <input id="contact-name" name="name" type="text" autocomplete="name" maxlength="100" required aria-describedby="contact-name-error">
+          <p id="contact-name-error" class="field-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="contact-email">Your email address</label>
+          <input id="contact-email" name="email" type="email" autocomplete="email" maxlength="200" required aria-describedby="contact-email-hint contact-email-error">
+          <p id="contact-email-hint" class="field-hint">We'll only use this to reply to you.</p>
+          <p id="contact-email-error" class="field-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="contact-subject">Subject</label>
+          <input id="contact-subject" name="subject" type="text" maxlength="150" required aria-describedby="contact-subject-error">
+          <p id="contact-subject-error" class="field-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message" name="message" rows="7" maxlength="5000" required aria-describedby="contact-message-error"></textarea>
+          <p id="contact-message-error" class="field-error" hidden></p>
+        </div>
+
+        <!-- Spam trap: hidden from people, filled in by bots. -->
+        <div class="trap" aria-hidden="true">
+          <label for="contact-botcheck">Leave this box unchecked</label>
+          <input id="contact-botcheck" name="botcheck" type="checkbox" tabindex="-1" autocomplete="off">
+        </div>
+
+        <p id="form-message" class="message" role="status" tabindex="-1" hidden></p>
+
+        <button id="send-button" type="submit" class="btn btn-primary">Send Message</button>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p><strong>Spruce Meadows Homeowners Association</strong></p>
+    <p>Boise, Idaho 83713 · <a href="mailto:spruce.meadows83713@gmail.com">spruce.meadows83713@gmail.com</a></p>
+  </footer>
+
+  <noscript>
+    <p class="noscript">This page needs JavaScript turned on to show the latest information.
+      You can email the board at <a href="mailto:spruce.meadows83713@gmail.com">spruce.meadows83713@gmail.com</a>.</p>
+  </noscript>
+
+  <script type="module" src="js/contact.js"></script>
+</body>
+</html>
