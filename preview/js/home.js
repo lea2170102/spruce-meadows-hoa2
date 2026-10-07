@@ -42,13 +42,38 @@ function compareAnnouncements(a, b) {
   return (b.date || "").localeCompare(a.date || "") || b.created - a.created;
 }
 
+// Turns web addresses in announcement text into clickable links.
+// Only http:// and https:// addresses become links (checked again by safeUrl);
+// everything else stays plain text. Built with text nodes, never innerHTML.
+const URL_IN_TEXT = /\bhttps?:\/\/[^\s<>"]+/gi;
+
+function linkify(body) {
+  const parts = [];
+  let last = 0;
+  for (const match of body.matchAll(URL_IN_TEXT)) {
+    let url = match[0];
+    // Leave sentence punctuation after a link as normal text, e.g. "(see https://x.org)."
+    while (/[.,;:!?'"\])]$/.test(url)) {
+      if (url.endsWith(")") && (url.match(/\(/g) || []).length >= (url.match(/\)/g) || []).length) break;
+      url = url.slice(0, -1);
+    }
+    const href = safeUrl(url);
+    if (!href) continue;
+    parts.push(body.slice(last, match.index));
+    parts.push(externalLink(href, url, "text-link"));
+    last = match.index + url.length;
+  }
+  parts.push(body.slice(last));
+  return parts;
+}
+
 function announcementCard(a) {
   return el("article", { class: "announcement" + (a.pinned ? " is-pinned" : "") },
     a.pinned && el("p", { class: "pinned-label", text: "Pinned" }),
     el("h3", { class: "announcement-title", text: a.title }),
     a.date && el("p", { class: "meta" }, "Posted ",
       el("time", { datetime: a.date, text: formatDate(a.date, { month: "long", day: "numeric", year: "numeric" }) })),
-    a.body && el("p", { class: "announcement-body", text: a.body }),
+    a.body && el("p", { class: "announcement-body" }, linkify(a.body)),
     a.buttonUrl && el("p", { class: "announcement-action" },
       externalLink(a.buttonUrl, a.buttonText || "More information", "btn btn-primary"))
   );
