@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Spruce Meadows Homeowners Association</title>
+  <meta name="description" content="News, meetings, events, and documents for the Spruce Meadows neighborhood in Boise, Idaho.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="logo-band">
+      <p class="utility"><a class="board-link" href="board.html">Board Login</a></p>
+      <a class="logo-link" href="index.html">
+        <img class="logo logo-large" src="images/logo.png" width="1020" height="364" alt="Spruce Meadows Homeowners Association">
+      </a>
+    </div>
+    <nav class="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html" aria-current="page">Home</a></li>
+        <li><a href="calendar.html">Calendar</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="page">
+
+    <section class="welcome" aria-labelledby="welcome-heading">
+      <h1 id="welcome-heading">Welcome to Spruce Meadows!</h1>
+      <p>We're a neighborhood of about 95 homes in Boise, and this site is here to help everyone stay connected.
+        You'll find community announcements, upcoming meetings and events, HOA documents, and an easy way to reach your board.
+        We're glad you're here. Thanks for being a good neighbor!</p>
+    </section>
+
+    <section class="home-section" aria-labelledby="next-heading">
+      <h2 id="next-heading" class="section-heading">Coming Up Next</h2>
+      <div id="next-event" aria-live="polite">
+        <p class="status-text">Loading the next event…</p>
+      </div>
+      <p class="see-all"><a href="calendar.html">See the full calendar</a></p>
+    </section>
+
+    <section class="home-section" aria-labelledby="announcements-heading">
+      <h2 id="announcements-heading" class="section-heading">Community Announcements</h2>
+      <div id="announcements" class="announcement-list" aria-live="polite">
+        <p class="status-text">Loading announcements…</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p><strong>Spruce Meadows Homeowners Association</strong></p>
+    <p>Boise, Idaho 83713 · <a href="mailto:spruce.meadows83713@gmail.com">spruce.meadows83713@gmail.com</a></p>
+  </footer>
+
+  <noscript>
+    <p class="noscript">This page needs JavaScript turned on to show the latest information.
+      You can email the board at <a href="mailto:spruce.meadows83713@gmail.com">spruce.meadows83713@gmail.com</a>.</p>
+  </noscript>
+
+  <script type="module" src="js/home.js"></script>
+</body>
+</html>
