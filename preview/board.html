@@ -32,7 +32,7 @@
     </nav>
   </header>
 
-  <main id="main" class="page page-narrow">
+  <main id="main" class="page page-board">
 
     <!-- Shown while Firebase checks whether the board is logged in -->
     <section id="loading-view" aria-live="polite">
@@ -68,23 +68,33 @@
     <!-- Board Portal (after login) -->
     <section id="portal-view" hidden aria-labelledby="portal-heading">
       <h1 id="portal-heading" tabindex="-1">Board Portal</h1>
-      <p class="intro">Choose what you'd like to update.</p>
-
-      <div class="portal-menu">
-        <button type="button" class="portal-button" data-section="Announcements">Announcements</button>
-        <button type="button" class="portal-button" data-section="Calendar">Calendar</button>
-        <button type="button" class="portal-button" data-section="Resources">Resources</button>
-        <button type="button" class="portal-button" data-section="Board Members">Board Members</button>
-      </div>
+      <p id="portal-intro" class="intro">Choose what you'd like to update.</p>
 
       <p id="portal-message" class="message" role="status" hidden></p>
 
-      <div class="portal-footer">
+      <div id="portal-menu" class="portal-menu">
+        <button type="button" class="portal-button" data-section="announcements">Announcements
+          <span class="portal-button-hint">Post news for residents</span></button>
+        <button type="button" class="portal-button" data-section="events">Calendar
+          <span class="portal-button-hint">Add meetings and events</span></button>
+        <button type="button" class="portal-button" data-section="resources">Resources
+          <span class="portal-button-hint">Documents, minutes and dues link</span></button>
+        <button type="button" class="portal-button" data-section="board">Board Members
+          <span class="portal-button-hint">Positions on the Contact page</span></button>
+      </div>
+
+      <!-- The selected section (list or form) appears here -->
+      <div id="portal-screen" class="portal-screen" hidden></div>
+
+      <div id="portal-footer" class="portal-footer">
         <button id="logout-button" type="button" class="btn btn-secondary">Log Out</button>
       </div>
     </section>
 
   </main>
+
+  <!-- Confirmation box for deleting and discarding changes -->
+  <dialog id="confirm-dialog" class="confirm-dialog"></dialog>
 
   <footer class="site-footer">
     <p><strong>Spruce Meadows Homeowners Association</strong></p>

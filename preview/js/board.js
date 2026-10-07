@@ -15,6 +15,7 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js";
 import { firebaseConfig, BOARD_EMAIL } from "./firebase-config.js";
+import { startPortal, stopPortal } from "./portal/router.js";
 
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -89,9 +90,10 @@ function loginErrorText(code) {
 onAuthStateChanged(auth, (user) => {
   if (user) {
     showView("portal");
-    portalHeading.focus();
+    startPortal();   // opens the dashboard (or the screen in the address bar)
   } else {
     showView("login");
+    stopPortal();
   }
 });
 
@@ -173,10 +175,5 @@ logoutButton.addEventListener("click", async () => {
   }
 });
 
-// ---------- Portal sections (built in later stages) ----------
-document.querySelectorAll("[data-section]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const name = button.dataset.section;
-    showMessage(portalMessage, name + " management is coming in a later stage.", "info");
-  });
-});
+// The portal screens (Announcements, Calendar, Resources, Board Members)
+// are in the js/portal/ folder.
