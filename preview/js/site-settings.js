@@ -13,4 +13,4 @@ export const TIME_ZONE = "America/Boise";
 // This key is designed to be public: it can only send messages to the
 // HOA email it was registered with. Leave it empty ("") to turn the
 // form off; residents will then be asked to email the board directly.
-export const WEB3FORMS_ACCESS_KEY = "";
+export const WEB3FORMS_ACCESS_KEY = "bfe5e6f0-79be-4558-a070-ed63b38b4b53";
