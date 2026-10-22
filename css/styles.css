@@ -776,3 +776,8 @@ input[aria-invalid="true"], textarea[aria-invalid="true"] { border: 2px solid va
 
 /* Home page: short "Coming Up Next" card */
 .next-event-card .event-details > .next-event-action { margin: 0.75rem 0 0; }
+
+/* Board Portal: archived announcements */
+.portal-list.is-archive .portal-item { border-left-color: var(--olive); background: #FBFBF8; }
+.portal-tag.tag-archived { background: #EEF0E4; border-color: #C9CDB3; color: var(--charcoal); }
+.portal-form .form-note { margin: 0 0 1.5rem; }
