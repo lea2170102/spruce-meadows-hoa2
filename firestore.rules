@@ -82,6 +82,27 @@ service cloud.firestore {
         && optTimestamp('updatedAt');
     }
 
+    // ---------- Archived announcements (board only) ----------
+    // Archive/Restore move an announcement here and back. Residents can't read this list.
+    match /announcementArchive/{id} {
+      allow read: if isBoard();
+      allow delete: if isBoard();
+      allow create, update: if isBoard()
+        && incoming().keys().hasOnly(['title', 'body', 'publishDate', 'expiresOn', 'pinned',
+                                      'buttonText', 'buttonUrl', 'createdAt', 'updatedAt',
+                                      'archivedAt'])
+        && reqText('title', 150)
+        && reqText('body', 5000)
+        && optDate('publishDate')
+        && optDate('expiresOn')
+        && optBool('pinned')
+        && optText('buttonText', 60)
+        && optUrl('buttonUrl')
+        && optTimestamp('createdAt')
+        && optTimestamp('updatedAt')
+        && optTimestamp('archivedAt');
+    }
+
     // ---------- Calendar events ----------
     // "type" is only kept so events from the old site stay editable.
     match /events/{id} {

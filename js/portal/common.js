@@ -75,6 +75,31 @@ export function updateMany(name, changes) {
   return withTimeout(batch.commit());
 }
 
+// Moves a record from one list to another (for example, an announcement into
+// the archive) as ONE save: the copy and the removal both happen, or neither
+// does. If anything fails, the original stays exactly where it was.
+// `transform` receives the record's stored fields and returns what to save.
+export async function moveDoc(fromName, toName, id, transform) {
+  const db = database();
+  const fromRef = doc(db, fromName, id);
+  const toRef = doc(db, toName, id);
+  const [fromSnap, toSnap] = await withTimeout(Promise.all([getDoc(fromRef), getDoc(toRef)]));
+  if (!fromSnap.exists()) {
+    const err = new Error("not-found");
+    err.code = "move-source-missing";
+    throw err;
+  }
+  if (toSnap.exists()) {
+    const err = new Error("already-exists");
+    err.code = "move-target-exists";
+    throw err;
+  }
+  const batch = writeBatch(db);
+  batch.set(toRef, transform({ ...fromSnap.data() }));
+  batch.delete(fromRef);
+  return withTimeout(batch.commit());
+}
+
 // ---------- Plain-English error messages ----------
 
 export function saveErrorText(error) {
@@ -90,6 +115,12 @@ export function saveErrorText(error) {
 
 export function actionErrorText(error, action) {
   const code = error && error.code;
+  if (code === "move-source-missing") {
+    return "This item couldn't be found. It may have already been moved or deleted. Please go back and reopen this list.";
+  }
+  if (code === "move-target-exists") {
+    return `We couldn't ${action} because a matching item already exists in the other list. Nothing was changed.`;
+  }
   if (code === "timeout" || code === "unavailable" || code === "deadline-exceeded") {
     return `We couldn't ${action}. Please check your internet connection and try again.`;
   }

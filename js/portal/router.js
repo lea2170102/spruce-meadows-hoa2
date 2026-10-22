@@ -83,16 +83,21 @@ function render() {
     body,
     goList: () => go(`#${section}`),
     goAdd: () => go(`#${section}/add`),
-    goEdit: (docId) => go(`#${section}/edit/${docId}`)
+    goEdit: (docId) => go(`#${section}/edit/${docId}`),
+    goAction: (name, docId) => go(`#${section}/${name}/${docId}`)
   };
 
-  if (action === "add" || (action === "edit" && id)) {
+  // Form screens: "add", "edit", plus any extra ones a section lists
+  // (Announcements adds "edit-archived" and "repost").
+  const formActions = ["edit", ...(mod.extraFormActions || [])];
+  if (action === "add" || (formActions.includes(action) && id)) {
     footer.hidden = true;   // finish or cancel the form first
-    const heading = el("h2", { class: "screen-heading", tabindex: "-1",
-      text: action === "add" ? mod.addTitle : mod.editTitle });
+    const title = action === "add" ? mod.addTitle
+      : (mod.formTitles && mod.formTitles[action]) || mod.editTitle;
+    const heading = el("h2", { class: "screen-heading", tabindex: "-1", text: title });
     screen.replaceChildren(backButton(`Back to ${mod.title}`, `#${section}`), heading, body);
     heading.focus();
-    Promise.resolve(mod.form(ctx, action === "edit" ? id : null)).then((form) => {
+    Promise.resolve(mod.form(ctx, action === "add" ? null : id, action)).then((form) => {
       if (location.hash === currentHash) currentForm = form || null;
     });
   } else {
