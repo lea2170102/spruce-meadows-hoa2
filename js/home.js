@@ -3,9 +3,9 @@
 import { loadCollection } from "./db.js";
 import {
   el, safeUrl, externalLink, text, isIsoDate, todayIso,
-  timestampToIso, timestampMillis, formatDate, showStatus
+  timestampToIso, timestampMillis, formatDate, formatTime, showStatus
 } from "./utils.js";
-import { prepareEvents, upcomingOnly, eventCard } from "./events.js";
+import { prepareEvents, upcomingOnly } from "./events.js";
 
 const nextEventBox = document.getElementById("next-event");
 const announcementsBox = document.getElementById("announcements");
@@ -101,6 +101,27 @@ async function showAnnouncements() {
 
 // ---------- Next event ----------
 
+// A short summary only: title, date, start time (if any) and a button to the
+// full details on the Calendar page. Location and description stay on the Calendar.
+function nextEventCard(ev) {
+  const time = ev.startTime ? formatTime(ev.startTime) : "";
+  return el("article", { class: `event-card next-event-card cat-${ev.category}` },
+    el("div", { class: "date-block", "aria-hidden": "true" },
+      el("span", { class: "date-month", text: formatDate(ev.date, { month: "short" }) }),
+      el("span", { class: "date-day", text: String(Number(ev.date.slice(8, 10))) })),
+    el("div", { class: "event-details" },
+      el("h3", { class: "event-title", text: ev.title }),
+      el("p", { class: "event-when" },
+        el("time", { datetime: ev.date, text: formatDate(ev.date) }),
+        time && el("span", { class: "event-time", text: ` · ${time}` })),
+      el("p", { class: "next-event-action" },
+        el("a", { class: "btn btn-primary btn-small", href: `calendar.html?date=${ev.date}` },
+          "View on Calendar",
+          el("span", { class: "visually-hidden", text: `: ${ev.title}` })))
+    )
+  );
+}
+
 async function showNextEvent() {
   try {
     const next = upcomingOnly(prepareEvents(await loadCollection("events")))[0];
@@ -108,7 +129,7 @@ async function showNextEvent() {
       showStatus(nextEventBox, "No upcoming meetings or events are scheduled right now.");
       return;
     }
-    nextEventBox.replaceChildren(eventCard(next, { headingLevel: "h3" }));
+    nextEventBox.replaceChildren(nextEventCard(next));
   } catch (error) {
     console.error(error);
     showStatus(nextEventBox,
