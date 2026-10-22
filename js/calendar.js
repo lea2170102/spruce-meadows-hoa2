@@ -1,7 +1,7 @@
 // Spruce Meadows HOA - Calendar page: Upcoming Events list + month calendar.
 
 import { loadCollection } from "./db.js";
-import { el, todayIso, formatDate, showStatus } from "./utils.js";
+import { el, todayIso, formatDate, showStatus, isIsoDate } from "./utils.js";
 import { prepareEvents, upcomingOnly, eventCard } from "./events.js";
 
 const upcomingBox = document.getElementById("upcoming-events");
@@ -17,8 +17,14 @@ const MONTHS = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
 
 const today = todayIso();
-let year = Number(today.slice(0, 4));
-let month = Number(today.slice(5, 7)) - 1; // 0-11
+
+// Opened from "View on Calendar" on the Home page (calendar.html?date=YYYY-MM-DD):
+// start on that date's month and show that day's details.
+const requested = new URLSearchParams(location.search).get("date");
+const startDate = isIsoDate(requested) ? requested : null;
+
+let year = Number((startDate || today).slice(0, 4));
+let month = Number((startDate || today).slice(5, 7)) - 1; // 0-11
 let eventsByDate = {};
 let selectedDate = null;
 
@@ -133,6 +139,7 @@ async function start() {
     for (const ev of events) (eventsByDate[ev.date] ||= []).push(ev);
     showUpcoming(events);
     renderMonth();
+    if (startDate && eventsByDate[startDate]) selectDay(startDate);
   } catch (error) {
     console.error(error);
     const msg = "We couldn't load the calendar. Please check your internet connection and refresh the page.";

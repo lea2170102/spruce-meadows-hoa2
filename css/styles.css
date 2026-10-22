@@ -773,3 +773,6 @@ input[aria-invalid="true"], textarea[aria-invalid="true"] { border: 2px solid va
   .form-actions .btn { flex: 1 1 auto; }
   .confirm-actions .btn { flex: 1 1 100%; }
 }
+
+/* Home page: short "Coming Up Next" card */
+.next-event-card .event-details > .next-event-action { margin: 0.75rem 0 0; }
