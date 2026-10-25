@@ -781,3 +781,82 @@ input[aria-invalid="true"], textarea[aria-invalid="true"] { border: 2px solid va
 .portal-list.is-archive .portal-item { border-left-color: var(--olive); background: #FBFBF8; }
 .portal-tag.tag-archived { background: #EEF0E4; border-color: #C9CDB3; color: var(--charcoal); }
 .portal-form .form-note { margin: 0 0 1.5rem; }
+
+/* ---------- Calendar: recycling reminders + busy days (Phase C4) ---------- */
+.recycle-icon { width: 1em; height: 1em; flex: none; color: var(--forest); }
+
+/* Inside a date (computer): small sage label with the drawn symbol */
+.chip.chip-recycling {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: #F1F4EA;
+  box-shadow: inset 0 0 0 1px var(--olive);
+  color: var(--charcoal);
+}
+.chip.chip-recycling .recycle-icon { width: 1rem; height: 1rem; }
+.chip.chip-recycling .chip-text { overflow: hidden; text-overflow: ellipsis; }
+.chip.chip-recycling.is-rescheduled { box-shadow: inset 0 0 0 2px var(--olive); }
+
+/* "+2 more" when a day has more than three things */
+.chip.chip-more { background: none; color: var(--charcoal); font-weight: 600; padding-left: 0.25rem; }
+
+/* Legend entry */
+.legend-icon { display: inline-flex; width: 1.5rem; justify-content: center; }
+.legend-icon .recycle-icon { width: 1.125rem; height: 1.125rem; }
+
+/* Details panel */
+.recycle-box {
+  background: #F4F7EF;
+  border: 1px solid #DCE3CF;
+  border-left: 5px solid var(--sage);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+}
+.recycle-box.is-rescheduled { border-left-color: var(--olive); }
+.recycle-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.375rem;
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--forest);
+}
+.recycle-title .recycle-icon { width: 1.375rem; height: 1.375rem; }
+.recycle-box p { margin: 0 0 0.5rem; }
+.recycle-box .recycle-action { margin: 0.75rem 0 0; }
+
+/* Phones: no words inside dates, just markers on one row */
+@media (max-width: 40rem) {
+  .day-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 0.1875rem; }
+  .chip { flex: 1 1 100%; }
+  .chip.chip-recycling {
+    flex: 0 0 auto;
+    height: auto;
+    padding: 0;
+    margin-top: 0.125rem;
+    background: none;
+    box-shadow: none;
+  }
+  .chip.chip-recycling .chip-text { display: none; }
+  .chip.chip-recycling .recycle-icon { width: 1.125rem; height: 1.125rem; }
+  .chip.chip-more {
+    flex: 0 0 auto;
+    height: auto;
+    padding: 0;
+    margin-top: 0.125rem;
+    font-size: 0.6875rem;
+    line-height: 1;
+  }
+  .chip.chip-more .more-word { display: none; }
+}
+
+/* Board Portal: Calendar Settings */
+.settings-card p { margin: 0 0 0.75rem; }
+.settings-card .portal-item-actions { margin-top: 1rem; }
+.settings-sentence { font-size: 1.0625rem; }
+.settings-reminder { margin-top: 2rem; }
+.settings-reminder p { margin: 0 0 0.5rem; }
+.settings-reminder p:last-child { margin: 0; }

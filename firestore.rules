@@ -156,6 +156,27 @@ service cloud.firestore {
         && optTimestamp('updatedAt');
     }
 
+    // ---------- Website settings (recycling schedule) ----------
+    // One record, settings/recycling. Everyone can read it (the calendar needs it);
+    // only the board can change it. Pickup dates are calculated in the browser.
+    match /settings/{name} {
+      allow read: if true;
+      allow delete: if isBoard();
+      allow create, update: if isBoard()
+        && name == 'recycling'
+        && incoming().keys().hasOnly(['enabled', 'referenceDate', 'intervalWeeks',
+                                      'scheduleName', 'officialUrl', 'changes', 'updatedAt'])
+        && incoming().enabled is bool
+        && incoming().referenceDate is string
+        && incoming().referenceDate.matches('[0-9]{4}-[0-9]{2}-[0-9]{2}')
+        && incoming().intervalWeeks in [1, 2]
+        && reqText('scheduleName', 30)
+        && isUrl(incoming().officialUrl)
+        && incoming().changes is list
+        && incoming().changes.size() <= 60
+        && optTimestamp('updatedAt');
+    }
+
     // ---------- Old site's meeting notes ----------
     // Read-only so the old site keeps working until launch. Remove after launch.
     match /notes/{id} {
