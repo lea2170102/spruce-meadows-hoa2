@@ -3,14 +3,15 @@
 // The address bar remembers where you are (for example board.html#announcements),
 // so the browser's Back button and page refresh work as expected.
 
-import { el } from "../utils.js?v=2026-10-25-c0";
-import { takeFlash, messageBox, confirmDiscard } from "./common.js?v=2026-10-25-c0";
-import announcements from "./announcements.js?v=2026-10-25-c0";
-import events from "./events.js?v=2026-10-25-c0";
-import resources from "./resources.js?v=2026-10-25-c0";
-import boardMembers from "./board-members.js?v=2026-10-25-c0";
+import { el } from "../utils.js?v=2026-10-25-c4";
+import { takeFlash, messageBox, confirmDiscard } from "./common.js?v=2026-10-25-c4";
+import announcements from "./announcements.js?v=2026-10-25-c4";
+import events from "./events.js?v=2026-10-25-c4";
+import resources from "./resources.js?v=2026-10-25-c4";
+import boardMembers from "./board-members.js?v=2026-10-25-c4";
+import calendarSettings from "./calendar-settings.js?v=2026-10-25-c4";
 
-const SECTIONS = { announcements, events, resources, board: boardMembers };
+const SECTIONS = { announcements, events, resources, board: boardMembers, settings: calendarSettings };
 
 const portalHeading = document.getElementById("portal-heading");
 const portalIntro = document.getElementById("portal-intro");
@@ -103,15 +104,18 @@ function render() {
   } else {
     footer.hidden = false;
     const heading = el("h2", { class: "screen-heading", tabindex: "-1", text: mod.title });
-    const addBtn = el("button", { type: "button", class: "btn btn-primary" }, `+ ${mod.addLabel}`);
-    addBtn.addEventListener("click", ctx.goAdd);
+    let addBtn = null;
+    if (mod.addLabel) {
+      addBtn = el("button", { type: "button", class: "btn btn-primary" }, `+ ${mod.addLabel}`);
+      addBtn.addEventListener("click", ctx.goAdd);
+    }
     const f = takeFlash();
     screen.replaceChildren(...[
       backButton("Back to Board Portal", ""),
       heading,
       mod.help ? el("p", { class: "screen-help", text: mod.help }) : null,
       f ? messageBox(f.text, f.kind) : null,
-      el("p", { class: "add-row" }, addBtn),
+      addBtn ? el("p", { class: "add-row" }, addBtn) : null,
       body
     ].filter(Boolean));
     heading.focus();

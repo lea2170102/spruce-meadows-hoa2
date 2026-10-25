@@ -3,7 +3,7 @@
 // Safety note: all content from the database is inserted with textContent
 // (never innerHTML), so typed text can never run as code on the page.
 
-import { TIME_ZONE } from "./site-settings.js?v=2026-10-25-c0";
+import { TIME_ZONE } from "./site-settings.js?v=2026-10-25-c4";
 
 // ---------- Building page elements safely ----------
 

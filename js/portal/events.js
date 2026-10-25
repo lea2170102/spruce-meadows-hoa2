@@ -1,12 +1,12 @@
 // Spruce Meadows HOA - Board Portal: Calendar events.
 
-import { el, text, isIsoDate, isTime, todayIso, formatDate } from "../utils.js?v=2026-10-25-c0";
-import { normalizeEvent, compareEvents, timeText, CATEGORY_LABELS } from "../events.js?v=2026-10-25-c0";
+import { el, text, isIsoDate, isTime, todayIso, formatDate } from "../utils.js?v=2026-10-25-c4";
+import { normalizeEvent, compareEvents, timeText, CATEGORY_LABELS } from "../events.js?v=2026-10-25-c4";
 import {
   listDocs, getOne, newId, createDoc, updateFields, removeDoc,
   buildForm, checkText, cleanUrl, confirmDelete, setFlash, messageBox,
   loadErrorBox, itemButton, tag, actionErrorText
-} from "./common.js?v=2026-10-25-c0";
+} from "./common.js?v=2026-10-25-c4";
 
 const NAME = "events";
 

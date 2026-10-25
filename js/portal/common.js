@@ -9,7 +9,7 @@ import {
   getFirestore, collection, doc, getDocs, getDoc, setDoc, updateDoc, deleteDoc,
   writeBatch, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
-import { el, safeUrl } from "../utils.js?v=2026-10-25-c0";
+import { el, safeUrl } from "../utils.js?v=2026-10-25-c4";
 
 // ---------- Database ----------
 
@@ -55,6 +55,11 @@ export function newId(name) {
 
 export function createDoc(name, id, data) {
   return withTimeout(setDoc(doc(database(), name, id), { ...data, createdAt: now(), updatedAt: now() }));
+}
+
+// Saves a whole record (used for single settings records). Adds updatedAt only.
+export function putDoc(name, id, data) {
+  return withTimeout(setDoc(doc(database(), name, id), { ...data, updatedAt: now() }));
 }
 
 // Changes only the fields given; everything else on the record is kept.

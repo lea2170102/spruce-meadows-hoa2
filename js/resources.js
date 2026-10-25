@@ -2,8 +2,8 @@
 // The website only stores LINKS. The documents themselves live in the
 // HOA's Google Drive (shared as "Anyone with the link - Viewer").
 
-import { loadCollection } from "./db.js?v=2026-10-25-c0";
-import { el, safeUrl, text, timestampMillis, showStatus } from "./utils.js?v=2026-10-25-c0";
+import { loadCollection } from "./db.js?v=2026-10-25-c4";
+import { el, safeUrl, text, timestampMillis, showStatus } from "./utils.js?v=2026-10-25-c4";
 
 const duesBox = document.getElementById("dues-links");
 const governingBox = document.getElementById("governing-links");

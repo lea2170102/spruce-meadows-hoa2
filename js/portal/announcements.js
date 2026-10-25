@@ -7,12 +7,12 @@
 
 import {
   el, text, isIsoDate, todayIso, timestampToIso, timestampMillis, formatDate
-} from "../utils.js?v=2026-10-25-c0";
+} from "../utils.js?v=2026-10-25-c4";
 import {
   listDocs, getOne, newId, createDoc, updateFields, removeDoc, moveDoc, now,
   buildForm, checkText, cleanUrl, confirmBox, setFlash, messageBox,
   loadErrorBox, itemButton, tag, actionErrorText
-} from "./common.js?v=2026-10-25-c0";
+} from "./common.js?v=2026-10-25-c4";
 
 const NAME = "announcements";
 const ARCHIVE = "announcementArchive";

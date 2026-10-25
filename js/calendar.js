@@ -1,8 +1,11 @@
-// Spruce Meadows HOA - Calendar page: Upcoming Events list + month calendar.
+// Spruce Meadows HOA - Calendar page: month calendar + Upcoming Events list.
+// The month calendar also shows recycling reminders (settings/recycling).
+// Recycling never appears in Upcoming Events or on the Home page.
 
-import { loadCollection } from "./db.js?v=2026-10-25-c0";
-import { el, todayIso, formatDate, showStatus, isIsoDate } from "./utils.js?v=2026-10-25-c0";
-import { prepareEvents, upcomingOnly, eventCard } from "./events.js?v=2026-10-25-c0";
+import { loadCollection } from "./db.js?v=2026-10-25-c4";
+import { el, todayIso, formatDate, showStatus, isIsoDate, externalLink } from "./utils.js?v=2026-10-25-c4";
+import { prepareEvents, upcomingOnly, eventCard } from "./events.js?v=2026-10-25-c4";
+import { normalizeSchedule, pickupsInMonth, pickupsBetween, recycleIcon } from "./recycling.js?v=2026-10-25-c4";
 
 const upcomingBox = document.getElementById("upcoming-events");
 const monthLabel = document.getElementById("month-label");
@@ -12,6 +15,7 @@ const prevButton = document.getElementById("prev-month");
 const nextButton = document.getElementById("next-month");
 const thisMonthButton = document.getElementById("this-month");
 const dayPanel = document.getElementById("day-panel");
+const legendRecycling = document.getElementById("legend-recycling");
 
 const MONTHS = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
@@ -26,7 +30,10 @@ const startDate = isIsoDate(requested) ? requested : null;
 let year = Number((startDate || today).slice(0, 4));
 let month = Number((startDate || today).slice(5, 7)) - 1; // 0-11
 let eventsByDate = {};
+let recycling = null;   // the recycling schedule, when turned on
 let selectedDate = null;
+
+const MAX_ITEMS_IN_DAY = 3; // more than this: show the first 2, then "+N more"
 
 // ---------- Upcoming list ----------
 
@@ -51,6 +58,8 @@ function renderMonth() {
   const firstWeekday = new Date(Date.UTC(year, month, 1)).getUTCDay();
   const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
 
+  const recyclingDays = recycling ? pickupsInMonth(recycling, year, month) : new Map();
+
   const rows = [];
   let cells = [];
   for (let i = 0; i < firstWeekday; i++) cells.push(el("td", { class: "day-empty" }));
@@ -62,9 +71,21 @@ function renderMonth() {
     const dayNum = el("span", { class: "day-num", text: String(day) });
     const td = el("td", { class: "day" + (isToday ? " is-today" : "") + (iso < today ? " is-past" : "") });
 
-    if (events.length) {
-      const label = `${formatDate(iso)}${isToday ? " (today)" : ""}: ` +
-        `${events.length} ${events.length === 1 ? "event" : "events"}. Show details.`;
+    const rec = recyclingDays.get(iso);
+
+    if (events.length || rec) {
+      // Always in this order: HOA events, then recycling.
+      const items = [
+        ...events.map((ev) => el("span", { class: `chip cat-${ev.category}`, text: ev.title })),
+        ...(rec ? [recyclingChip(rec)] : [])
+      ];
+      const shown = items.length > MAX_ITEMS_IN_DAY
+        ? [...items.slice(0, 2), el("span", { class: "chip chip-more" }, `+${items.length - 2}`, el("span", { class: "more-word", text: " more" }))]
+        : items;
+      const parts = [];
+      if (rec) parts.push(rec.rescheduled ? "rescheduled recycling day" : "recycling day");
+      if (events.length) parts.push(`${events.length} ${events.length === 1 ? "event" : "events"}`);
+      const label = `${formatDate(iso)}${isToday ? " (today)" : ""}: ${parts.join(", ")}. Show details.`;
       const button = el("button", {
         type: "button",
         class: "day-button" + (iso === selectedDate ? " is-selected" : ""),
@@ -73,8 +94,7 @@ function renderMonth() {
         "data-date": iso
       },
         dayNum,
-        el("span", { class: "day-chips", "aria-hidden": "true" },
-          events.map((ev) => el("span", { class: `chip cat-${ev.category}`, text: ev.title })))
+        el("span", { class: "day-chips", "aria-hidden": "true" }, shown)
       );
       button.addEventListener("click", () => selectDay(iso));
       td.append(button);
@@ -100,15 +120,39 @@ function renderMonth() {
     : "No events this month.";
 }
 
+// ---------- Recycling ----------
+
+function recyclingChip(rec) {
+  return el("span", { class: "chip chip-recycling" + (rec.rescheduled ? " is-rescheduled" : "") },
+    recycleIcon("recycle-icon"),
+    el("span", { class: "chip-text", text: rec.rescheduled ? "Rescheduled" : "Recycling" }));
+}
+
+function recyclingBox(rec) {
+  return el("section", { class: "recycle-box" + (rec.rescheduled ? " is-rescheduled" : "") },
+    el("h4", { class: "recycle-title" },
+      recycleIcon("recycle-icon"),
+      rec.rescheduled ? "Rescheduled Recycling" : "Recycling Day"),
+    el("p", { class: "recycle-schedule", text: `${recycling.scheduleName} recycling schedule` }),
+    rec.rescheduled ? el("p", { class: "recycle-moved", text: `Moved from ${formatDate(rec.movedFrom)}.` }) : null,
+    recycling.officialUrl
+      ? el("p", { class: "recycle-action" },
+          externalLink(recycling.officialUrl, "View Official Recycling Calendar", "btn btn-primary btn-small"))
+      : null
+  );
+}
+
 function selectDay(iso) {
   selectedDate = iso;
   renderMonth();
   const events = eventsByDate[iso] || [];
-  const heading = el("h3", { class: "day-panel-heading", tabindex: "-1", text: `Events on ${formatDate(iso)}` });
-  dayPanel.replaceChildren(
+  const rec = recycling ? pickupsBetween(recycling, iso, iso).get(iso) : null;
+  const heading = el("h3", { class: "day-panel-heading", tabindex: "-1", text: formatDate(iso) });
+  dayPanel.replaceChildren(...[
     heading,
-    ...events.map((ev) => eventCard(ev, { headingLevel: "h4", showAddToCalendar: iso >= today }))
-  );
+    ...events.map((ev) => eventCard(ev, { headingLevel: "h4", showAddToCalendar: iso >= today })),
+    rec ? recyclingBox(rec) : null
+  ].filter(Boolean));
   dayPanel.hidden = false;
   heading.focus({ preventScroll: true });
   dayPanel.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -133,15 +177,31 @@ thisMonthButton.addEventListener("click", () => {
 
 async function start() {
   renderMonth();
-  try {
-    const events = prepareEvents(await loadCollection("events"));
+  const [eventsResult, settingsResult] = await Promise.allSettled([
+    loadCollection("events"),
+    loadCollection("settings")
+  ]);
+
+  // Recycling: optional. If it can't load, the calendar works normally without it.
+  if (settingsResult.status === "fulfilled") {
+    const schedule = normalizeSchedule(settingsResult.value.find((d) => d.id === "recycling"));
+    recycling = schedule && schedule.enabled ? schedule : null;
+  } else {
+    console.warn("Recycling schedule couldn't be loaded.", settingsResult.reason);
+  }
+  legendRecycling.hidden = !recycling;
+  if (recycling) document.getElementById("legend-recycling-icon").replaceChildren(recycleIcon("recycle-icon"));
+
+  if (eventsResult.status === "fulfilled") {
+    const events = prepareEvents(eventsResult.value);
     eventsByDate = {};
     for (const ev of events) (eventsByDate[ev.date] ||= []).push(ev);
     showUpcoming(events);
     renderMonth();
     if (startDate && eventsByDate[startDate]) selectDay(startDate);
-  } catch (error) {
-    console.error(error);
+  } else {
+    console.error(eventsResult.reason);
+    renderMonth();
     const msg = "We couldn't load the calendar. Please check your internet connection and refresh the page.";
     showStatus(upcomingBox, msg, "error");
     monthStatus.textContent = "Events couldn't be loaded.";
