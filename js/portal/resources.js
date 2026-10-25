@@ -3,12 +3,12 @@
 // The website only stores LINKS. The PDFs stay in Google Drive.
 // Removing a resource here never deletes anything from Google Drive.
 
-import { el, text, timestampMillis, safeUrl } from "../utils.js";
+import { el, text, timestampMillis, safeUrl } from "../utils.js?v=2026-10-25-c0";
 import {
   listDocs, getOne, newId, createDoc, updateFields, removeDoc,
   buildForm, checkText, cleanUrl, confirmDelete, setFlash, messageBox,
   loadErrorBox, itemButton, tag, actionErrorText
-} from "./common.js";
+} from "./common.js?v=2026-10-25-c0";
 
 const NAME = "resources";
 

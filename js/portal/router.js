@@ -3,12 +3,12 @@
 // The address bar remembers where you are (for example board.html#announcements),
 // so the browser's Back button and page refresh work as expected.
 
-import { el } from "../utils.js";
-import { takeFlash, messageBox, confirmDiscard } from "./common.js";
-import announcements from "./announcements.js";
-import events from "./events.js";
-import resources from "./resources.js";
-import boardMembers from "./board-members.js";
+import { el } from "../utils.js?v=2026-10-25-c0";
+import { takeFlash, messageBox, confirmDiscard } from "./common.js?v=2026-10-25-c0";
+import announcements from "./announcements.js?v=2026-10-25-c0";
+import events from "./events.js?v=2026-10-25-c0";
+import resources from "./resources.js?v=2026-10-25-c0";
+import boardMembers from "./board-members.js?v=2026-10-25-c0";
 
 const SECTIONS = { announcements, events, resources, board: boardMembers };
 
