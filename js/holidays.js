@@ -4,9 +4,8 @@
 // outside service is used. Holidays appear on the month calendar only (never
 // in Upcoming Events, Coming Up Next or on the Home page).
 //
-// Federal holidays: fixed-date ones that fall on a Saturday are also shown as
-// "(observed)" on the Friday before; on a Sunday, on the Monday after.
-// Common holidays have no observed days.
+// Each holiday is shown only on the date it actually falls on. Separate
+// "observed" weekdays (when a holiday lands on a weekend) are not shown.
 
 const pad = (n) => String(n).padStart(2, "0");
 const iso = (y, m, d) => `${y}-${pad(m)}-${pad(d)}`;           // m is 1-12
@@ -36,34 +35,16 @@ function easter(y) {
   return iso(y, month, day);
 }
 
-function shift(dateIso, days) {
-  const [y, m, d] = dateIso.split("-").map(Number);
-  const t = new Date(Date.UTC(y, m - 1, d + days));
-  return iso(t.getUTCFullYear(), t.getUTCMonth() + 1, t.getUTCDate());
-}
-
-// All holidays for one year (observed days may fall in the previous year,
-// e.g. New Year's Day on a Saturday is observed on Friday, December 31).
-// Each: { date, name, federal, observed, actualDate }
+// All holidays for one year. Each: { date, name, federal }
 export function holidaysForYear(y) {
   const list = [];
-  const add = (date, name, federal) => list.push({ date, name, federal, observed: false, actualDate: date });
+  const add = (date, name, federal) => list.push({ date, name, federal });
 
-  const fixedFederal = [
-    [1, 1, "New Year's Day"],
-    [6, 19, "Juneteenth"],
-    [7, 4, "Independence Day"],
-    [11, 11, "Veterans Day"],
-    [12, 25, "Christmas Day"]
-  ];
-  for (const [m, d, name] of fixedFederal) {
-    const date = iso(y, m, d);
-    add(date, name, true);
-    const wd = weekday(y, m, d);
-    if (wd === 6 || wd === 0) {
-      list.push({ date: shift(date, wd === 6 ? -1 : 1), name: `${name} (observed)`, federal: true, observed: true, actualDate: date });
-    }
-  }
+  add(iso(y, 1, 1), "New Year's Day", true);
+  add(iso(y, 6, 19), "Juneteenth", true);
+  add(iso(y, 7, 4), "Independence Day", true);
+  add(iso(y, 11, 11), "Veterans Day", true);
+  add(iso(y, 12, 25), "Christmas Day", true);
 
   add(nthWeekday(y, 1, 1, 3), "Martin Luther King Jr. Day", true);
   add(nthWeekday(y, 2, 1, 3), "Presidents' Day", true);
@@ -85,8 +66,7 @@ export function holidaysForYear(y) {
 export function holidaysInMonth(year, monthIndex) {
   const prefix = `${year}-${pad(monthIndex + 1)}-`;
   const out = new Map();
-  // Next year's list is included so an observed New Year's Day on Dec 31 is found.
-  for (const h of [...holidaysForYear(year), ...holidaysForYear(year + 1)]) {
+  for (const h of holidaysForYear(year)) {
     if (!h.date.startsWith(prefix)) continue;
     if (!out.has(h.date)) out.set(h.date, []);
     out.get(h.date).push(h);

@@ -870,18 +870,25 @@ input[aria-invalid="true"], textarea[aria-invalid="true"] { border: 2px solid va
   border-radius: 50%;
   background: var(--olive);
 }
-/* Inside a date (computer): small plain olive text, no box, no dot */
+/* Inside a date (computer): small plain olive text, no box, no dot.
+   Long names wrap onto a second line (centered) instead of being cut off. */
 .chip.chip-holiday {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.25rem;
   background: none;
-  padding-left: 0.25rem;
+  padding: 0.125rem 0.25rem;   /* spans the full date box (margins below) so the longest word fits */
+  margin-left: -0.25rem;
+  margin-right: -0.25rem;
+  text-align: center;
+  white-space: normal;
+  overflow: visible;
   color: #5E6540;          /* darker olive so small text stays readable */
   font-style: italic;
 }
 .chip.chip-holiday .holiday-dot { display: none; }
-.chip.chip-holiday .chip-text { overflow: hidden; text-overflow: ellipsis; }
+.chip.chip-holiday .chip-text { white-space: normal; overflow-wrap: normal; min-width: 0; }  /* wrap between words only */
 
 /* Details panel */
 .holiday-box {
@@ -895,13 +902,18 @@ input[aria-invalid="true"], textarea[aria-invalid="true"] { border: 2px solid va
 .holiday-line .holiday-dot { position: relative; top: -0.0625rem; }
 .holiday-line strong { color: var(--forest); }
 
+/* Narrow computer windows: drop the inner spacing so long words still fit */
+@media (max-width: 48rem) {
+  .chip.chip-holiday { padding-left: 0; padding-right: 0; }
+}
+
 /* Phones: a small olive dot instead of the name */
 @media (max-width: 40rem) {
   .chip.chip-holiday {
     flex: 0 0 auto;
     height: auto;
     padding: 0;
-    margin-top: 0.125rem;
+    margin: 0.125rem 0 0;
   }
   .chip.chip-holiday .chip-text { display: none; }
   .chip.chip-holiday .holiday-dot { display: inline-block; width: 0.5625rem; height: 0.5625rem; }

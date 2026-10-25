@@ -8,7 +8,7 @@
 // needs to be re-entered each January. Board-entered date changes move a single
 // pickup ("Rescheduled Recycling"). Nothing moves automatically for holidays.
 
-import { isIsoDate, safeUrl, text, addDaysIso } from "./utils.js?v=2026-10-25-c5";
+import { isIsoDate, safeUrl, text, addDaysIso } from "./utils.js?v=2026-10-25-c5b";
 
 // The confirmed City of Boise schedule, used only to pre-fill the first-time
 // setup form in the Board Portal. The calendar never uses these directly.

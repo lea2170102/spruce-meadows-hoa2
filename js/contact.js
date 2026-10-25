@@ -1,8 +1,8 @@
 // Spruce Meadows HOA - Contact page: board positions + contact form.
 
-import { loadCollection } from "./db.js?v=2026-10-25-c5";
-import { el, text, showStatus } from "./utils.js?v=2026-10-25-c5";
-import { HOA_EMAIL, WEB3FORMS_ACCESS_KEY } from "./site-settings.js?v=2026-10-25-c5";
+import { loadCollection } from "./db.js?v=2026-10-25-c5b";
+import { el, text, showStatus } from "./utils.js?v=2026-10-25-c5b";
+import { HOA_EMAIL, WEB3FORMS_ACCESS_KEY } from "./site-settings.js?v=2026-10-25-c5b";
 
 // ---------- Board positions ----------
 

@@ -3,11 +3,11 @@
 // It also shows automatic holidays (js/holidays.js, calculated in the browser).
 // Recycling and holidays never appear in Upcoming Events or on the Home page.
 
-import { loadCollection } from "./db.js?v=2026-10-25-c5";
-import { el, todayIso, formatDate, showStatus, isIsoDate, externalLink } from "./utils.js?v=2026-10-25-c5";
-import { prepareEvents, upcomingOnly, eventCard } from "./events.js?v=2026-10-25-c5";
-import { normalizeSchedule, pickupsInMonth, pickupsBetween, recycleIcon } from "./recycling.js?v=2026-10-25-c5";
-import { holidaysInMonth } from "./holidays.js?v=2026-10-25-c5";
+import { loadCollection } from "./db.js?v=2026-10-25-c5b";
+import { el, todayIso, formatDate, showStatus, isIsoDate, externalLink } from "./utils.js?v=2026-10-25-c5b";
+import { prepareEvents, upcomingOnly, eventCard } from "./events.js?v=2026-10-25-c5b";
+import { normalizeSchedule, pickupsInMonth, pickupsBetween, recycleIcon } from "./recycling.js?v=2026-10-25-c5b";
+import { holidaysInMonth } from "./holidays.js?v=2026-10-25-c5b";
 
 const upcomingBox = document.getElementById("upcoming-events");
 const monthLabel = document.getElementById("month-label");
@@ -156,9 +156,7 @@ function holidayBox(holidays) {
       el("span", { class: "holiday-dot", "aria-hidden": "true" }),
       el("span", {},
         el("strong", { text: h.name }),
-        h.observed
-          ? ` · Federal holiday observed on this date. The holiday itself is ${formatDate(h.actualDate)}.`
-          : h.federal ? " · Federal holiday" : "")))
+        h.federal ? " · Federal holiday" : "")))
   );
 }
 
