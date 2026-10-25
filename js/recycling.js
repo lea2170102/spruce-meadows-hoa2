@@ -8,7 +8,7 @@
 // needs to be re-entered each January. Board-entered date changes move a single
 // pickup ("Rescheduled Recycling"). Nothing moves automatically for holidays.
 
-import { isIsoDate, safeUrl, text, addDaysIso } from "./utils.js?v=2026-10-25-c4";
+import { isIsoDate, safeUrl, text, addDaysIso } from "./utils.js?v=2026-10-25-c4b";
 
 // The confirmed City of Boise schedule, used only to pre-fill the first-time
 // setup form in the Board Portal. The calendar never uses these directly.
@@ -17,7 +17,7 @@ export const RECYCLING_SETUP_DEFAULTS = {
   referenceDate: "2026-10-12",
   intervalWeeks: 2,
   scheduleName: "Purple",
-  officialUrl: "https://www.cityofboise.org/media/20799/curbit-recyclingcalendar_updated2026_english.pdf"
+  officialUrl: "https://www.cityofboise.org/recycling/"
 };
 
 export const MAX_DATE_CHANGES = 60;

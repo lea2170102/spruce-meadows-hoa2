@@ -4,7 +4,7 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
-import { firebaseConfig } from "./firebase-config.js?v=2026-10-25-c4";
+import { firebaseConfig } from "./firebase-config.js?v=2026-10-25-c4b";
 
 const db = getFirestore(initializeApp(firebaseConfig));
 

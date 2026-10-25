@@ -14,8 +14,8 @@ import {
   signOut,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js";
-import { firebaseConfig, BOARD_EMAIL } from "./firebase-config.js?v=2026-10-25-c4";
-import { startPortal, stopPortal } from "./portal/router.js?v=2026-10-25-c4";
+import { firebaseConfig, BOARD_EMAIL } from "./firebase-config.js?v=2026-10-25-c4b";
+import { startPortal, stopPortal } from "./portal/router.js?v=2026-10-25-c4b";
 
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);

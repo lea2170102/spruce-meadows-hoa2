@@ -2,10 +2,10 @@
 // The month calendar also shows recycling reminders (settings/recycling).
 // Recycling never appears in Upcoming Events or on the Home page.
 
-import { loadCollection } from "./db.js?v=2026-10-25-c4";
-import { el, todayIso, formatDate, showStatus, isIsoDate, externalLink } from "./utils.js?v=2026-10-25-c4";
-import { prepareEvents, upcomingOnly, eventCard } from "./events.js?v=2026-10-25-c4";
-import { normalizeSchedule, pickupsInMonth, pickupsBetween, recycleIcon } from "./recycling.js?v=2026-10-25-c4";
+import { loadCollection } from "./db.js?v=2026-10-25-c4b";
+import { el, todayIso, formatDate, showStatus, isIsoDate, externalLink } from "./utils.js?v=2026-10-25-c4b";
+import { prepareEvents, upcomingOnly, eventCard } from "./events.js?v=2026-10-25-c4b";
+import { normalizeSchedule, pickupsInMonth, pickupsBetween, recycleIcon } from "./recycling.js?v=2026-10-25-c4b";
 
 const upcomingBox = document.getElementById("upcoming-events");
 const monthLabel = document.getElementById("month-label");

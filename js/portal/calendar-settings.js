@@ -4,15 +4,15 @@
 // Pickup dates are calculated on the Calendar page (see js/recycling.js),
 // so nothing here needs re-entering each year.
 
-import { el, formatDate, todayIso, isIsoDate, safeUrl } from "../utils.js?v=2026-10-25-c4";
+import { el, formatDate, todayIso, isIsoDate, safeUrl } from "../utils.js?v=2026-10-25-c4b";
 import {
   normalizeSchedule, isRegularPickup, nextPickups, weekdayName, daysBetween,
   RECYCLING_SETUP_DEFAULTS, MAX_DATE_CHANGES, MAX_MOVE_DAYS
-} from "../recycling.js?v=2026-10-25-c4";
+} from "../recycling.js?v=2026-10-25-c4b";
 import {
   getOne, putDoc, updateFields, buildForm, checkText, cleanUrl, confirmBox,
   setFlash, messageBox, loadErrorBox, itemButton, tag, actionErrorText
-} from "./common.js?v=2026-10-25-c4";
+} from "./common.js?v=2026-10-25-c4b";
 
 const NAME = "settings";
 const ID = "recycling";
@@ -25,8 +25,8 @@ function scheduleSentence(s) {
 
 function yearlyReminder() {
   return el("div", { class: "message message-info settings-reminder" },
-    el("p", {}, el("strong", { text: "Each January: " }),
-      "open the City of Boise's new recycling calendar. If the City has published a new one, update the official calendar link. Then add any date changes the City has confirmed. The every-other-week pattern continues automatically, so you don't need to re-enter it."),
+    el("p", {}, el("strong", { text: "Once a year: " }),
+      "when the City of Boise publishes next year's recycling calendar, review it and add any pickup-date changes the City has confirmed for the new year. The every-other-week Purple schedule continues automatically, so you don't need to re-enter it."),
     el("p", { text: "Only enter changes the City of Boise has confirmed. Holidays don't move recycling automatically." }));
 }
 
