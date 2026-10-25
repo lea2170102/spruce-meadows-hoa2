@@ -9,7 +9,7 @@ import {
   getFirestore, collection, doc, getDocs, getDoc, setDoc, updateDoc, deleteDoc,
   writeBatch, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
-import { el, safeUrl } from "../utils.js?v=2026-10-25-c4b";
+import { el, safeUrl } from "../utils.js?v=2026-10-25-c5";
 
 // ---------- Database ----------
 

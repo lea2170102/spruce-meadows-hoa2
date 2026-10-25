@@ -4,15 +4,15 @@
 // Pickup dates are calculated on the Calendar page (see js/recycling.js),
 // so nothing here needs re-entering each year.
 
-import { el, formatDate, todayIso, isIsoDate, safeUrl } from "../utils.js?v=2026-10-25-c4b";
+import { el, formatDate, todayIso, isIsoDate, safeUrl } from "../utils.js?v=2026-10-25-c5";
 import {
   normalizeSchedule, isRegularPickup, nextPickups, weekdayName, daysBetween,
   RECYCLING_SETUP_DEFAULTS, MAX_DATE_CHANGES, MAX_MOVE_DAYS
-} from "../recycling.js?v=2026-10-25-c4b";
+} from "../recycling.js?v=2026-10-25-c5";
 import {
   getOne, putDoc, updateFields, buildForm, checkText, cleanUrl, confirmBox,
   setFlash, messageBox, loadErrorBox, itemButton, tag, actionErrorText
-} from "./common.js?v=2026-10-25-c4b";
+} from "./common.js?v=2026-10-25-c5";
 
 const NAME = "settings";
 const ID = "recycling";

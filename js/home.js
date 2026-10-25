@@ -1,11 +1,11 @@
 // Spruce Meadows HOA - Home page: next event + community announcements.
 
-import { loadCollection } from "./db.js?v=2026-10-25-c4b";
+import { loadCollection } from "./db.js?v=2026-10-25-c5";
 import {
   el, safeUrl, externalLink, text, isIsoDate, todayIso,
   timestampToIso, timestampMillis, formatDate, formatTime, showStatus
-} from "./utils.js?v=2026-10-25-c4b";
-import { prepareEvents, upcomingOnly } from "./events.js?v=2026-10-25-c4b";
+} from "./utils.js?v=2026-10-25-c5";
+import { prepareEvents, upcomingOnly } from "./events.js?v=2026-10-25-c5";
 
 const nextEventBox = document.getElementById("next-event");
 const announcementsBox = document.getElementById("announcements");
