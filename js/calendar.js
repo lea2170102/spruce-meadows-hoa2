@@ -1,11 +1,13 @@
 // Spruce Meadows HOA - Calendar page: month calendar + Upcoming Events list.
 // The month calendar also shows recycling reminders (settings/recycling).
-// Recycling never appears in Upcoming Events or on the Home page.
+// It also shows automatic holidays (js/holidays.js, calculated in the browser).
+// Recycling and holidays never appear in Upcoming Events or on the Home page.
 
-import { loadCollection } from "./db.js?v=2026-10-25-c4b";
-import { el, todayIso, formatDate, showStatus, isIsoDate, externalLink } from "./utils.js?v=2026-10-25-c4b";
-import { prepareEvents, upcomingOnly, eventCard } from "./events.js?v=2026-10-25-c4b";
-import { normalizeSchedule, pickupsInMonth, pickupsBetween, recycleIcon } from "./recycling.js?v=2026-10-25-c4b";
+import { loadCollection } from "./db.js?v=2026-10-25-c5";
+import { el, todayIso, formatDate, showStatus, isIsoDate, externalLink } from "./utils.js?v=2026-10-25-c5";
+import { prepareEvents, upcomingOnly, eventCard } from "./events.js?v=2026-10-25-c5";
+import { normalizeSchedule, pickupsInMonth, pickupsBetween, recycleIcon } from "./recycling.js?v=2026-10-25-c5";
+import { holidaysInMonth } from "./holidays.js?v=2026-10-25-c5";
 
 const upcomingBox = document.getElementById("upcoming-events");
 const monthLabel = document.getElementById("month-label");
@@ -59,6 +61,7 @@ function renderMonth() {
   const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
 
   const recyclingDays = recycling ? pickupsInMonth(recycling, year, month) : new Map();
+  const holidayDays = holidaysInMonth(year, month);
 
   const rows = [];
   let cells = [];
@@ -72,17 +75,20 @@ function renderMonth() {
     const td = el("td", { class: "day" + (isToday ? " is-today" : "") + (iso < today ? " is-past" : "") });
 
     const rec = recyclingDays.get(iso);
+    const holidays = holidayDays.get(iso) || [];
 
-    if (events.length || rec) {
-      // Always in this order: HOA events, then recycling.
+    if (events.length || rec || holidays.length) {
+      // Always in this order: HOA events, then recycling, then holidays.
       const items = [
         ...events.map((ev) => el("span", { class: `chip cat-${ev.category}`, text: ev.title })),
-        ...(rec ? [recyclingChip(rec)] : [])
+        ...(rec ? [recyclingChip(rec)] : []),
+        ...holidays.map((h) => el("span", { class: "chip chip-holiday" },
+          el("span", { class: "holiday-dot" }), el("span", { class: "chip-text", text: h.name })))
       ];
       const shown = items.length > MAX_ITEMS_IN_DAY
         ? [...items.slice(0, 2), el("span", { class: "chip chip-more" }, `+${items.length - 2}`, el("span", { class: "more-word", text: " more" }))]
         : items;
-      const parts = [];
+      const parts = holidays.map((h) => h.name);
       if (rec) parts.push(rec.rescheduled ? "rescheduled recycling day" : "recycling day");
       if (events.length) parts.push(`${events.length} ${events.length === 1 ? "event" : "events"}`);
       const label = `${formatDate(iso)}${isToday ? " (today)" : ""}: ${parts.join(", ")}. Show details.`;
@@ -142,16 +148,32 @@ function recyclingBox(rec) {
   );
 }
 
+// ---------- Holidays ----------
+
+function holidayBox(holidays) {
+  return el("section", { class: "holiday-box", "aria-label": "Holidays" },
+    holidays.map((h) => el("p", { class: "holiday-line" },
+      el("span", { class: "holiday-dot", "aria-hidden": "true" }),
+      el("span", {},
+        el("strong", { text: h.name }),
+        h.observed
+          ? ` · Federal holiday observed on this date. The holiday itself is ${formatDate(h.actualDate)}.`
+          : h.federal ? " · Federal holiday" : "")))
+  );
+}
+
 function selectDay(iso) {
   selectedDate = iso;
   renderMonth();
   const events = eventsByDate[iso] || [];
   const rec = recycling ? pickupsBetween(recycling, iso, iso).get(iso) : null;
+  const holidays = holidaysInMonth(Number(iso.slice(0, 4)), Number(iso.slice(5, 7)) - 1).get(iso) || [];
   const heading = el("h3", { class: "day-panel-heading", tabindex: "-1", text: formatDate(iso) });
   dayPanel.replaceChildren(...[
     heading,
     ...events.map((ev) => eventCard(ev, { headingLevel: "h4", showAddToCalendar: iso >= today })),
-    rec ? recyclingBox(rec) : null
+    rec ? recyclingBox(rec) : null,
+    holidays.length ? holidayBox(holidays) : null
   ].filter(Boolean));
   dayPanel.hidden = false;
   heading.focus({ preventScroll: true });

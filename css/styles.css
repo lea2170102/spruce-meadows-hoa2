@@ -860,3 +860,49 @@ input[aria-invalid="true"], textarea[aria-invalid="true"] { border: 2px solid va
 .settings-reminder { margin-top: 2rem; }
 .settings-reminder p { margin: 0 0 0.5rem; }
 .settings-reminder p:last-child { margin: 0; }
+
+/* ---------- Calendar: automatic holidays (Phase C5) ---------- */
+.holiday-dot {
+  display: inline-block;
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--olive);
+}
+/* Inside a date (computer): small plain olive text, no box, no dot */
+.chip.chip-holiday {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: none;
+  padding-left: 0.25rem;
+  color: #5E6540;          /* darker olive so small text stays readable */
+  font-style: italic;
+}
+.chip.chip-holiday .holiday-dot { display: none; }
+.chip.chip-holiday .chip-text { overflow: hidden; text-overflow: ellipsis; }
+
+/* Details panel */
+.holiday-box {
+  background: var(--white);
+  border: 1px solid #E4E2D8;
+  border-left: 5px solid var(--olive);
+  border-radius: var(--radius);
+  padding: 0.75rem 1.25rem;
+}
+.holiday-line { display: flex; align-items: baseline; gap: 0.5rem; margin: 0.25rem 0; }
+.holiday-line .holiday-dot { position: relative; top: -0.0625rem; }
+.holiday-line strong { color: var(--forest); }
+
+/* Phones: a small olive dot instead of the name */
+@media (max-width: 40rem) {
+  .chip.chip-holiday {
+    flex: 0 0 auto;
+    height: auto;
+    padding: 0;
+    margin-top: 0.125rem;
+  }
+  .chip.chip-holiday .chip-text { display: none; }
+  .chip.chip-holiday .holiday-dot { display: inline-block; width: 0.5625rem; height: 0.5625rem; }
+}
