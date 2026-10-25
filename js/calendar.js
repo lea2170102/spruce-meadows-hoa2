@@ -1,8 +1,8 @@
 // Spruce Meadows HOA - Calendar page: Upcoming Events list + month calendar.
 
-import { loadCollection } from "./db.js";
-import { el, todayIso, formatDate, showStatus, isIsoDate } from "./utils.js";
-import { prepareEvents, upcomingOnly, eventCard } from "./events.js";
+import { loadCollection } from "./db.js?v=2026-10-25-c0";
+import { el, todayIso, formatDate, showStatus, isIsoDate } from "./utils.js?v=2026-10-25-c0";
+import { prepareEvents, upcomingOnly, eventCard } from "./events.js?v=2026-10-25-c0";
 
 const upcomingBox = document.getElementById("upcoming-events");
 const monthLabel = document.getElementById("month-label");

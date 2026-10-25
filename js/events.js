@@ -4,7 +4,7 @@
 import {
   el, safeUrl, externalLink, text, isIsoDate, isTime,
   formatDate, formatTime, addDaysIso, boiseToUtc, todayIso
-} from "./utils.js";
+} from "./utils.js?v=2026-10-25-c0";
 
 export const CATEGORY_LABELS = {
   meeting: "HOA Meeting",
